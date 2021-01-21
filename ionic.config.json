@@ -1,0 +1,7 @@
+{
+  "name": "BoxingHouse",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
