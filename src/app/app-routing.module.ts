@@ -5,6 +5,10 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+  },
+  {
+    path: 'chronometer',
+    loadChildren: () => import('./pages/chronometer/chronometer.module').then( m => m.ChronometerPageModule)
   }
 ];
 @NgModule({

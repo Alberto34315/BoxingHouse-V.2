@@ -1,0 +1,17 @@
+{
+    "TAB1": {
+        "training": "Entrenamientos"
+    },
+    "TAB2": {
+        "chronometer": "Cronómetro",
+        "rounds":"Rondas",
+        "roundsT":"Tiempo De Rondas",
+        "breakT":"Descanso",
+        "clean":"Limpiar",
+        "start":"Empezar"
+    },
+    "TAB3": {
+        "profile": "Perfil"
+    }
+    
+}

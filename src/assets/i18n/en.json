@@ -1,0 +1,17 @@
+{
+    "TAB1": {
+        "training": "Training"
+    },
+    "TAB2": {
+        "chronometer": "Chronometer",
+        "rounds":"Rounds",
+        "roundsT":"Rounds Time",
+        "breakT":"Break Time",
+        "clean":"Clean",
+        "start":"Start"
+    },
+    "TAB3": {
+        "profile": "Profile"
+    }
+    
+}
