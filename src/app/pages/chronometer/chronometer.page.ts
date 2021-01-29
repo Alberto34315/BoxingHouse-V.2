@@ -18,6 +18,7 @@ export class ChronometerPage implements OnInit {
   startDuration = 1;
   circleR = circleR;
   circleDasharray = circleDasharray;
+  countRound=1;
   state: 'start' | 'stop' = 'stop';
   constructor(private modalController: ModalController) { }
 
@@ -26,12 +27,18 @@ export class ChronometerPage implements OnInit {
   }
   startTime(duration: number) {
     this.state = 'start';
-    clearInterval(this.interval);
-    this.t = duration * 5;
-    this.updateTimeValue();
-    this.interval = setInterval(() => {
+    if(this.countRound<=this.timer.round){
+      clearInterval(this.interval);
+      this.t = duration * ((this.timer.tRounds.min*60)+this.timer.tRounds.s);
       this.updateTimeValue();
-    }, 1000);
+      this.interval = setInterval(() => {
+        this.updateTimeValue();
+      }, 1000);
+      
+    }else{
+      this.stopTimer();
+    }
+   
   }
 /*  swapDuration() {
     this.startDuration = this.startDuration === 1 ? 0.5 : 1;
@@ -44,16 +51,18 @@ export class ChronometerPage implements OnInit {
     s = String('0' + Math.floor(s)).slice(-2);
     const text = m + ':' + s;
     this.time.next(text);
-    const totalTime = this.startDuration * 5;
+    const totalTime = this.startDuration * ((this.timer.tRounds.min*60)+this.timer.tRounds.s);
     const percentage = ((totalTime - this.t) / totalTime) * 100;
     this.percent.next(percentage);
     --this.t;
     if (this.t < -1) {
+      this.countRound++;
       this.startTime(this.startDuration);
     }
   }
   stopTimer() {
     clearInterval(this.interval);
+    this.countRound--;
     this.time.next('00:00');
     this.state = 'stop';
   }
