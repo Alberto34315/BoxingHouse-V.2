@@ -25,13 +25,17 @@
     </svg>
   </ion-row>
   <ion-footer class="footer">
-    <ion-button *ngIf="state==='stop'" expand="block" shape="round" (click)="this.startTime(this.startDuration)"
+    <ion-button *ngIf="state==='finish'" expand="block" shape="round" (click)="this.startTime(this.startDuration)"
       color="primary">
       START
     </ion-button>
-    <ion-button *ngIf="state==='start'" expand="block" shape="round" (click)="this.stopTimer()" color="danger">
+    <ion-button *ngIf="state==='resume'" expand="block" shape="round" (click)="this.stopTimer()" color="danger">
       STOP
     </ion-button>
+ <ion-button *ngIf="state==='stop'" expand="block" shape="round" (click)="this.resume()"
+    color="success">
+    RESUME
+  </ion-button>
   </ion-footer>
 
 </ion-content>
