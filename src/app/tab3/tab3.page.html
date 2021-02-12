@@ -9,4 +9,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-item>
+    <ion-avatar class="item-avatar" (click)="this.setAvatar()" slot="start">
+      <img [src]="this.user.avatar">
+    </ion-avatar>
+    <ion-label>
+      <h3>{{this.user.name}}</h3>
+      <p>{{this.user.email}}</p>
+    </ion-label>
+  </ion-item>
+<ion-button shape="round" expand="full"  (click)="this.logout()" >{{'TAB3.logout' | translate}}<ion-icon name="exit-sharp"></ion-icon>
+</ion-button>
 </ion-content>

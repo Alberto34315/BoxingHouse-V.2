@@ -1,23 +1,7 @@
-<!--<ion-buttons slot="end">
-  <ion-button>
-    <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
-  </ion-button>
-</ion-buttons>
-<ion-list>
-  <ion-item button *ngFor="let lng of idiom" (click)="select(lng.value)" detail="false">
-    <img class="icon" [src]="lng.img" slot="start">
-    <ion-label text-wrap>{{lng.text}}</ion-label>
-    <ion-icon slot="end" name="checkmark" *ngIf="lng.value==selected"></ion-icon>
-  </ion-item>
-</ion-list>-->
-
-  <ion-button class="bIdiom" (click)='displayIdiom($event)'>
-    <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical">
-    <ion-select (ionChange)="select($event)" #listIdiom >
-      <ion-select-option *ngFor="let language of idiom"  [value]="language.value">{{language.text}}</ion-select-option>
+<ion-button class="bIdiom" (click)='displayIdiom($event)'>
+  <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical">
+    <ion-select (ionChange)="select($event)" #listIdiom>
+      <ion-select-option *ngFor="let language of idiom" [value]="language.value">{{language.text}}</ion-select-option>
     </ion-select>
   </ion-icon>
-  </ion-button>
-  
- 
-  
+</ion-button>

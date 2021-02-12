@@ -15,16 +15,31 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CountdownModule } from 'ngx-countdown';
 import { ChronometerPage } from './pages/chronometer/chronometer.page';
 import { TimerService } from './services/timer.service';
+import { LoginPage } from './pages/login/login.page';
+import { SignupPage } from './pages/signup/signup.page';
+import { HTTP } from '@ionic-native/http/ngx';
+import { ApiService } from './services/api.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from './services/auth.service';
+import { PresentService } from './services/present.service';
+import { GalleryService } from './services/gallery.service';
+import { File } from '@ionic-native/file/ngx';
+import { FileTransfer} from '@ionic-native/file-transfer/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
+import { AddtrainingPage } from './pages/addtraining/addtraining.page';
+import { ExerciseComponent } from './components/exercise/exercise.component';
+
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 @NgModule({
-  declarations: [AppComponent,ChronometerPage],
-  entryComponents: [ChronometerPage],
+  declarations: [AppComponent,ChronometerPage, AddtrainingPage,ExerciseComponent/*,LoginPage,SignupPage*/],
+  entryComponents: [ChronometerPage,AddtrainingPage,ExerciseComponent/*,LoginPage,SignupPage*/],
   imports: [BrowserModule, 
     CountdownModule,
     IonicModule.forRoot(),
      AppRoutingModule,
+     ReactiveFormsModule,
      HttpClientModule,
      TranslateModule.forRoot({
       loader: {
@@ -35,8 +50,16 @@ export function createTranslateLoader(http: HttpClient) {
     })],
   providers: [
     StatusBar,
+    ApiService,
+    HTTP,
     SplashScreen,
     NativeStorage,
+    File,
+    Camera,
+    FileTransfer,
+    PresentService,
+    GalleryService,
+    AuthService,
     TimerService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

@@ -11,7 +11,8 @@
         "start":"Start"
     },
     "TAB3": {
-        "profile": "Profile"
+        "profile": "Profile",
+        "logout": "Sign off"
     }
     
 }

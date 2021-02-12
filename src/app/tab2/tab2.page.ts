@@ -63,6 +63,15 @@ export class Tab2Page {
         timer: this.timer
       }
     });
+
     return await modal.present();
+  }
+
+  reset(){
+    this.round = 1;
+    this.timerS.min=0;
+    this.timerS.s=5;
+    this.timerS.minBT=0;
+    this.timerS.sBT=5;
   }
 }

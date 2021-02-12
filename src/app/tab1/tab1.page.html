@@ -6,8 +6,35 @@
     </ion-title> 
   <app-popover slot="end"></app-popover>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar #input showCancelButton="focus" debounce="500" (ionChange)="searchPlayer($event)"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
- 
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of trainings">
+      <!--<ion-item-options side="start" (click)="editItem(item)">-->
+      <ion-item-options side="start">
+        <ion-item-option color="primary">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+      <ion-item>
+       <div><h1>{{item.title}}</h1>
+        {{item.time}}
+      </div>
+      </ion-item>
+      <ion-item-options side="end">
+       <ion-item-option color="danger" (click)="this.removeTraining(item)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+ <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+  <ion-fab-button (click)="this.addtraining()">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 </ion-content>

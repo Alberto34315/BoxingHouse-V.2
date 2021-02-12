@@ -1,0 +1,8 @@
+{
+    "/user": {
+       "target": "https://apirestfulbh.herokuapp.com/",
+       "changeOrigin": true,
+       "secure": false,
+       "logLevel": "debug"
+     }
+}

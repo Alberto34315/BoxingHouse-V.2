@@ -45,7 +45,7 @@
 
   <ion-item>
     
-    <ion-button class="bCleStar" slot="start" shape="round">
+    <ion-button (click)="this.reset()" class="bCleStar" slot="start" shape="round">
       <ion-icon class="clear" name="close-circle-outline"></ion-icon>
       {{'TAB2.clean' | translate}}
     </ion-button>

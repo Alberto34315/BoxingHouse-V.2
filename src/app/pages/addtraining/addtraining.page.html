@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button shape="round" (click)="this.exit()" color="success">
+      <ion-icon name="arrow-undo-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+  <form id="form" [formGroup]="task" (ngSubmit)="this.save()">
+    <ion-item lines="full">
+      <ion-label position="floating">Title</ion-label>
+      <ion-input type="text" formControlName="title"></ion-input>
+    </ion-item>
+    <ion-item-sliding *ngFor="let item of exercises">
+      <app-exercise></app-exercise>
+    </ion-item-sliding>
+   
+ 
+    <ion-item class="tab2">
+      <ion-label>{{'TAB2.breakT' | translate}}:
+        <ion-button (click)="this.removeBTime()" class="addRemove" slot="start" shape="round">
+          <ion-icon name="remove-circle-outline"></ion-icon>
+        </ion-button> 
+        {{this.timerS.minBT}}:{{this.timerS.sBT}}
+          <ion-button (click)="this.addBTime()" class="addRemove" slot="start" shape="round">
+          <ion-icon name="add-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-label>
+    </ion-item>
+ 
+    <ion-button shape="round" expand="full"  type="submit">SAVE</ion-button>
+  </form>
+   
+  <ion-fab horizontal="start" vertical="bottom"  slot="fixed">
+    <ion-fab-button (click)="this.removeExercise()">
+      <ion-icon name="remove"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button (click)="this.addExercise()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
