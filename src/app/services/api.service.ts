@@ -29,6 +29,22 @@ export class ApiService {
         .catch(err => reject(err));
     });
   }
+  public getTrainingsbyUser(id?:number | string): Promise<training[] | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiTraining+environment.apiUser+id;
+     
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if(d) {
+            resolve(JSON.parse(d.data));
+          }else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
   public searchCredentials(email:String,pass:String): Promise<user | null> {
     return new Promise((resolve, reject) => {
       const endpoint = environment.endpoint + environment.apiUser+"search/email/"+email+"/"+pass;
@@ -146,6 +162,9 @@ export class ApiService {
   public searchByTitle(value:string): Promise<training[] | null> {
     return this.getTrainings('search/' +value);
   }
+  public searchByTitleFromUser(value:string,id:number): Promise<training[] | null> {
+    return this.getTrainings('search/' +value+'/'+environment.apiUser+id);
+  }
   public removeTraining(item: any): Promise<void> {
     console.log(item)
     const id: any = item.id ? item.id : item;
@@ -174,6 +193,22 @@ public removeExercise(item: any): Promise<void> {
         .catch(err => reject(err));
     });
   }
+
+  public removeListExercise(itemT: any,itemE: any): Promise<void> {
+    const idT: any = itemT.id ? itemT.id : itemT;
+    const idE: any = itemE.id ? itemE.id : itemE;
+    const endpoint = environment.endpoint + environment.apiTraining + idT+"/"+environment.apiExercise+idE;
+    console.log(endpoint)
+    return new Promise((resolve, reject) => {
+      this.http
+        .delete(endpoint, {}, this.header)
+        .then(d => {
+          resolve();
+        })
+        .catch(err => reject(err));
+    });
+  }
+
   private get header(): any {
     return {
       'Access-Control-Allow-Origin': '*',

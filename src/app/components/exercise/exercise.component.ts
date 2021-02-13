@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { exercise } from 'src/app/model/exercise';
 
 @Component({
   selector: 'app-exercise',
@@ -7,6 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./exercise.component.scss'],
 })
 export class ExerciseComponent implements OnInit {
+  @Input() exercise:exercise;
   num=1;
   public task: FormGroup;
   constructor(private formBuilder: FormBuilder) { 

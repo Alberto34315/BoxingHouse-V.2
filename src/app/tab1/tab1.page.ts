@@ -1,8 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonSearchbar, ModalController } from '@ionic/angular';
 import { training } from '../model/training';
+import { AddExercisePage } from '../pages/add-exercise/add-exercise.page';
 import { AddtrainingPage } from '../pages/addtraining/addtraining.page';
 import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth.service';
 import { PresentService } from '../services/present.service';
 
 @Component({
@@ -15,6 +17,7 @@ export class Tab1Page {
   @ViewChild('input', { static: false }) myInput: IonSearchbar;
   constructor(private api: ApiService,
     private modalController: ModalController,
+    private authS: AuthService,
     private present: PresentService) { }
 
   async ionViewDidEnter() {
@@ -23,7 +26,7 @@ export class Tab1Page {
   public async loadAll() {
     // await this.present.presentLoading;
     try {
-      this.trainings = await this.api.getTrainings();
+      this.trainings = await this.api.getTrainingsbyUser(this.authS.getUser().id);
       //    this.present.dismissLoad();
     } catch (err) {
       this.trainings = null; //vista
@@ -35,9 +38,23 @@ export class Tab1Page {
     await this.openAddTraining();
     await this.loadAll();
   }
+
+  async addexercise() {
+    await this.openAddExercise();
+    await this.loadAll();
+  }
   async openAddTraining(): Promise<any> {
     const modal = await this.modalController.create({
       component: AddtrainingPage,
+      cssClass: 'my-custom-class',
+
+    });
+    await modal.present();
+    return await modal.onWillDismiss();
+  }
+  async openAddExercise(): Promise<any> {
+    const modal = await this.modalController.create({
+      component: AddExercisePage,
       cssClass: 'my-custom-class',
 
     });
@@ -49,7 +66,7 @@ export class Tab1Page {
     value = value.trim();
     if (value !== '') {
       //await this.ui.showLoading();
-      this.api.searchByTitle(value)
+      this.api.searchByTitleFromUser(value,this.authS.getUser().id)
         .then(d => {
           this.trainings = d;
         })
@@ -66,7 +83,10 @@ export class Tab1Page {
     //Eliminar de la tabla en medio
     await this.present.presentLoading;
     item.exercises.forEach(element => {
-    this.api.removeExercise(element).then(d=>{}).catch(err=>{});
+      this.api.removeListExercise(item.id,element).then(d=>{
+        this.api.removeExercise(element).then(d=>{}).catch(err=>{});
+      }).catch(err=>{});
+    
     });
     this.api.removeTraining(item).then(async d => await this.loadAll())
       .catch(async err => await this.present.presentToast(err.error, "danger")

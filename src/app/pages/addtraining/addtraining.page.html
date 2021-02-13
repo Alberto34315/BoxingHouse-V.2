@@ -14,7 +14,7 @@
       <ion-input type="text" formControlName="title"></ion-input>
     </ion-item>
     <ion-item-sliding *ngFor="let item of exercises">
-      <app-exercise></app-exercise>
+      <app-exercise [exercise]="item"></app-exercise>
     </ion-item-sliding>
    
  
