@@ -37,6 +37,7 @@ export class AddtrainingPage implements OnInit {
   removeBTime(){
     this.timerS.removeBTime();
   }
+  /*
   addExercise(){
     this.exercise={
       photo:'',
@@ -52,7 +53,7 @@ export class AddtrainingPage implements OnInit {
     if(this.exercises.length>0){
       this.exercises.pop();
     }
-   }
+   }*/
 
   public async save(){
     await this.present.presentLoading();
@@ -64,7 +65,7 @@ export class AddtrainingPage implements OnInit {
     this.training={
       title:this.task.get('title').value,
       time:(this.timerS.minBT * 60) + this.timerS.sBT,
-      exercises:this.exercises,
+      exercises:[],
       creator:this.authS.getUser()
     }
     this.api.createTraning(this.training).then((respuesta) => {

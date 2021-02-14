@@ -13,9 +13,7 @@
       <ion-label position="floating">Title</ion-label>
       <ion-input type="text" formControlName="title"></ion-input>
     </ion-item>
-    <ion-item-sliding *ngFor="let item of exercises">
-      <app-exercise [exercise]="item"></app-exercise>
-    </ion-item-sliding>
+    
    
  
     <ion-item class="tab2">
@@ -32,7 +30,7 @@
  
     <ion-button shape="round" expand="full"  type="submit">SAVE</ion-button>
   </form>
-   
+  <!--
   <ion-fab horizontal="start" vertical="bottom"  slot="fixed">
     <ion-fab-button (click)="this.removeExercise()">
       <ion-icon name="remove"></ion-icon>
@@ -43,4 +41,5 @@
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+  --> 
 </ion-content>

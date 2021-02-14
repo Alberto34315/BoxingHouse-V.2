@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AddtrainingPageRoutingModule } from './addtraining-routing.module';
 
 import { AddtrainingPage } from './addtraining.page';
-import { ExerciseComponent } from 'src/app/components/exercise/exercise.component';
+
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
