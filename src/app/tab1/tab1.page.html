@@ -33,8 +33,21 @@
     </ion-item-sliding>
   </ion-list>
  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
-  <ion-fab-button (click)="this.addtraining()">
+  <ion-fab-button >
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
+  <ion-fab-list side="top">
+    <ion-fab-button (click)="this.addtraining()">
+      <ion-icon name="clipboard-sharp"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+  <ion-fab-list side="start">
+    <ion-fab-button (click)="this.addexercise()">
+      <ion-icon name="barbell-sharp"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button (click)="this.listexercise()">
+      <ion-icon name="clipboard-sharp"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
 </ion-fab>
 </ion-content>

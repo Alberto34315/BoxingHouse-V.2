@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button shape="round" (click)="this.exit()" color="success">
+      <ion-icon name="arrow-undo-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form id="form" [formGroup]="task" (ngSubmit)="this.save()">
+    <ion-item class="photoExercise" >
+      <ion-thumbnail class="centerExercise" (click)="this.setAvatar()" slot="start"> 
+      <ion-img  [src]="this.exercise.photo"></ion-img>
+      </ion-thumbnail>
+    </ion-item>
+    <ion-item >
+      <ion-label position="floating">Exercise</ion-label>
+      <ion-input formControlName="exercise" type="text" ></ion-input>
+    </ion-item>
+      <ion-item >
+      <ion-label position="floating">Description</ion-label>
+      <ion-input formControlName="description" type="text" ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Type</ion-label>
+      <ion-select formControlName="type" interface="popover" >
+        <ion-select-option value="repetitions">Repetitions</ion-select-option>
+        <ion-select-option  value="time">Time</ion-select-option>
+      </ion-select>
+      <ion-button (click)="this.removeTRounds()" class="addRemove" slot="" shape="round">
+        <ion-icon name="remove-circle-outline"></ion-icon>
+      </ion-button> 
+      {{this.num}}
+        <ion-button (click)="this.addTRounds()" class="addRemove" slot="" shape="round">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+    <ion-footer>
+      <ion-button type="submit" expand="block" shape="round">SAVE</ion-button>
+    </ion-footer>
+    </form>
+    
+</ion-content>

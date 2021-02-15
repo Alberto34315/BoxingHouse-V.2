@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button shape="round" (click)="this.exit()" color="success">
+      <ion-icon name="arrow-undo-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar #input showCancelButton="focus" debounce="500" (ionChange)="searchPlayer($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of exercises">
+      <!--<ion-item-options side="start" (click)="editItem(item)">-->
+      <ion-item-options side="start">
+        <ion-item-option color="primary">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+      <ion-item>
+        <ion-thumbnail (click)="this.setAvatar()" slot="start"> 
+          <ion-img  [src]="item.photo"></ion-img>
+          </ion-thumbnail>
+       <div><h1>{{item.nameExercise}}</h1>
+        {{item.description}}
+      </div>
+      </ion-item>
+      <ion-item-options side="end">
+       <ion-item-option color="danger" (click)="this.removeExercises(item)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

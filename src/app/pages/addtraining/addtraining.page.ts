@@ -16,7 +16,7 @@ import { TimerService } from 'src/app/services/timer.service';
 export class AddtrainingPage implements OnInit {
   training:training
   public task: FormGroup;
-  lista:string[]=["hola","que","tal"];
+  
   exercise:exercise;
   exercises:exercise[]=[];
   constructor(private modalController: ModalController,
@@ -44,7 +44,8 @@ export class AddtrainingPage implements OnInit {
       nameExercise:'',
       description:'',
       type:'',
-      repTime:0
+      repTime:0,
+      creator:this.authS.getUser()
     }
     this.exercises.push(this.exercise);
   }

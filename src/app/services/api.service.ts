@@ -29,6 +29,37 @@ export class ApiService {
         .catch(err => reject(err));
     });
   }
+  public getTrainingsByUser(id?:number): Promise<training[] | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiTraining+"user/"+id;
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if(d) {
+            resolve(JSON.parse(d.data));
+          }else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+  public getExercisesByUser(id?:number): Promise<exercise[] | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiExercise+"user/"+id;
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if(d) {
+            resolve(JSON.parse(d.data));
+          }else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
   public searchCredentials(email:String,pass:String): Promise<user | null> {
     return new Promise((resolve, reject) => {
       const endpoint = environment.endpoint + environment.apiUser+"search/email/"+email+"/"+pass;
@@ -143,8 +174,8 @@ export class ApiService {
     });
   }
 
-  public searchByTitle(value:string): Promise<training[] | null> {
-    return this.getTrainings('search/' +value);
+  public searchByTitle(value:string,id:number): Promise<training[] | null> {
+    return this.getTrainings('search/' +value+"/user/"+id);
   }
   public removeTraining(item: any): Promise<void> {
     console.log(item)

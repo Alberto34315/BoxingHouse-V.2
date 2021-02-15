@@ -1,8 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonSearchbar, ModalController } from '@ionic/angular';
 import { training } from '../model/training';
+import { AddExercisePage } from '../pages/add-exercise/add-exercise.page';
 import { AddtrainingPage } from '../pages/addtraining/addtraining.page';
+import { ListExercisePage } from '../pages/list-exercise/list-exercise.page';
 import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth.service';
 import { PresentService } from '../services/present.service';
 
 @Component({
@@ -14,6 +17,7 @@ export class Tab1Page {
   trainings: training[]
   @ViewChild('input', { static: false }) myInput: IonSearchbar;
   constructor(private api: ApiService,
+    private authS:AuthService,
     private modalController: ModalController,
     private present: PresentService) { }
 
@@ -23,7 +27,7 @@ export class Tab1Page {
   public async loadAll() {
     // await this.present.presentLoading;
     try {
-      this.trainings = await this.api.getTrainings();
+      this.trainings = await this.api.getTrainingsByUser(this.authS.getUser().id);
       //    this.present.dismissLoad();
     } catch (err) {
       this.trainings = null; //vista
@@ -44,12 +48,41 @@ export class Tab1Page {
     await modal.present();
     return await modal.onWillDismiss();
   }
+  async addexercise() {
+    await this.openAddExercise();
+    await this.loadAll();
+  }
+  async openAddExercise(): Promise<any> {
+    const modal = await this.modalController.create({
+      component: AddExercisePage,
+      cssClass: 'my-custom-class',
+
+    });
+    
+    await modal.present();
+    return await modal.onWillDismiss();
+  }
+  async listexercise() {
+    await this.openListExercise();
+    await this.loadAll();
+  }
+  async openListExercise(): Promise<any> {
+    const modal = await this.modalController.create({
+      component: ListExercisePage,
+      cssClass: 'my-custom-class',
+
+    });
+    
+    await modal.present();
+    return await modal.onWillDismiss();
+  }
+
   public async searchPlayer($event) {
     let value = $event.detail.value;
     value = value.trim();
     if (value !== '') {
       //await this.ui.showLoading();
-      this.api.searchByTitle(value)
+      this.api.searchByTitle(value,this.authS.getUser().id)
         .then(d => {
           this.trainings = d;
         })

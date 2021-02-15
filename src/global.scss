@@ -105,7 +105,21 @@
             font-size: 20px;
           }
 
-         
+          
+          .centerExercise{
+            width: 200px;
+            height: 200px;
+	          margin-left: auto;
+            margin-right: auto;
+          }
+          .photoExercise{
+            width: 200px;
+            height: 200px;            
+            display: block;
+            margin-top: 5%;
+	          margin-left: auto;
+            margin-right: auto;
+          }
           .item-avatar  {     
             width:100px !important;  
             height : 100px !important;  

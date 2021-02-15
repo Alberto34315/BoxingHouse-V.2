@@ -22,7 +22,15 @@ const routes: Routes = [
   {
     path: 'addtraining',
     loadChildren: () => import('./pages/addtraining/addtraining.module').then( m => m.AddtrainingPageModule)
+  },  {
+    path: 'add-exercise',
+    loadChildren: () => import('./pages/add-exercise/add-exercise.module').then( m => m.AddExercisePageModule)
+  },
+  {
+    path: 'list-exercise',
+    loadChildren: () => import('./pages/list-exercise/list-exercise.module').then( m => m.ListExercisePageModule)
   }
+
 ];
 @NgModule({
   imports: [
