@@ -13,6 +13,22 @@
     "TAB3": {
         "profile": "Perfil",
         "logout": "Cerrar Sesión"
+    },
+    "TRAINING":{
+        "title":"Título"
+    },
+    "EXERCISE":{
+        "name":"Ejercicio",
+        "names":"Ejercicios",
+        "repetitions":"Repeticiones",
+        "time":"Tiempo",
+        "save":"GUARDAR",
+        "type":"Tipo",
+        "description":"Descripción",
+        "add":"Añadir"
+    },
+    "CHRONOMETER":{
+        "start":"COMENZAR"
     }
     
 }

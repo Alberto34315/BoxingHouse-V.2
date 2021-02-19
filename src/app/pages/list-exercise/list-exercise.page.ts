@@ -4,6 +4,7 @@ import { exercise } from 'src/app/model/exercise';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { PresentService } from 'src/app/services/present.service';
+import { AddExercisePage } from '../add-exercise/add-exercise.page';
 
 @Component({
   selector: 'app-list-exercise',
@@ -23,11 +24,14 @@ export class ListExercisePage implements OnInit {
   async ionViewDidEnter() {
     await this.loadAll();
   }
-  public async loadAll() {
+  public async loadAll($event = null) {
     // await this.present.presentLoading;
     try {
       this.exercises = await this.api.getExercisesByUser(this.authS.getUser().id);
       //    this.present.dismissLoad();
+      if ($event) {
+        $event.target.complete();
+      }
     } catch (err) {
       this.exercises = null; //vista
       //      this.present.dismissLoad();
@@ -36,6 +40,40 @@ export class ListExercisePage implements OnInit {
   }
   public exit() {
     this.modalController.dismiss();
+  }
+  async editExercise(e:exercise) {
+    await this.openAddExercise(e);
+    await this.loadAll();
+  }
+  public async searchExercise($event) {
+    let value = $event.detail.value;
+    value = value.trim();
+    if (value !== '') {
+      //await this.ui.showLoading();
+      this.api.searchExerciseByTitle(value,this.authS.getUser().id)
+        .then(d => {
+          this.exercises = d;
+        })
+        .catch(async err => await this.present.presentToast(err.error, "danger"))
+        .finally(async () => {
+          // await this.ui.hideLoading();
+          // this.myInput.setFocus();
+        });
+    } else {
+      await this.loadAll();
+    }
+  }
+  async openAddExercise(e?:any): Promise<any> {
+
+    const modal = await this.modalController.create({
+      component: AddExercisePage,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        exerciseEdit: e
+      }
+    });
+    await modal.present();
+    return await modal.onWillDismiss();
   }
   public async removeExercises(item: exercise) {
     //Eliminar de la tabla en medio

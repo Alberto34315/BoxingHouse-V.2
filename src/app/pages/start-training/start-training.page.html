@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-button shape="round" (click)="this.exit()" color="success">
+      <ion-icon name="arrow-undo-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <h2 class="center">{{this.countRound}}/{{this.trainingStart.exercises.length}}</h2>
+  </ion-item>
+  <ion-item>
+    <h2 class="center">{{this.trainingStart.exercises[this.i].nameExercise}}</h2>
+  </ion-item>
+  <ion-item>
+    <img class="centerExercise" [src]="this.trainingStart.exercises[this.i].photo" />
+  </ion-item>
+  <ion-item>
+    <p style="margin-left: auto; font-size: 25px;"><b>{{this.trainingStart.exercises[this.i].type}}:</b></p>
+    <p style="margin-right: auto;margin-left: 20px; font-size: 25px;">{{this.t}}
+    </p>
+  </ion-item>
+  <ion-item *ngIf="this.trainingStart.exercises[this.i].type=='Time'">
+    <ion-button *ngIf="state==='stop'" (click)="this.playTime()" class="center" style="height: 50px; width: 50px; font-size: 20px;">
+      <ion-icon name="play-outline"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="state==='start'" (click)="this.stopTime()" class="center" style="height: 50px; width: 50px; font-size: 20px;">
+      <ion-icon name="pause-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <ion-fab (click)="this.back()" vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="arrow-back-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab (click)="this.next()" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

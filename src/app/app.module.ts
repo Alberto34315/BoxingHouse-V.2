@@ -29,14 +29,17 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { AddtrainingPage } from './pages/addtraining/addtraining.page';
 import { AddExercisePage } from './pages/add-exercise/add-exercise.page';
 import { ListExercisePage } from './pages/list-exercise/list-exercise.page';
+import { SelectExercisePage } from './pages/select-exercise/select-exercise.page';
+import { ExecuteTrainingPage } from './pages/execute-training/execute-training.page';
+import { StartTrainingPage } from './pages/start-training/start-training.page';
 
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 @NgModule({
-  declarations: [AppComponent,ChronometerPage, AddtrainingPage,AddExercisePage,ListExercisePage/*,LoginPage,SignupPage*/],
-  entryComponents: [ChronometerPage,AddtrainingPage,AddExercisePage,ListExercisePage/*,LoginPage,SignupPage*/],
+  declarations: [AppComponent,ChronometerPage, AddtrainingPage,AddExercisePage,ListExercisePage,SelectExercisePage,ExecuteTrainingPage,StartTrainingPage/*,LoginPage,SignupPage*/],
+  entryComponents: [ChronometerPage,AddtrainingPage,AddExercisePage,ListExercisePage,SelectExercisePage,ExecuteTrainingPage,StartTrainingPage/*,LoginPage,SignupPage*/],
   imports: [BrowserModule, 
     CountdownModule,
     IonicModule.forRoot(),

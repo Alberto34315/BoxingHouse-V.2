@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
+import { Time } from 'src/app/model/time';
 import { Timer } from 'src/app/model/timer';
+import { training } from 'src/app/model/training';
 const circleR = 80;
 const circleDasharray = 2 * Math.PI * circleR;
 
@@ -12,10 +14,14 @@ const circleDasharray = 2 * Math.PI * circleR;
 })
 export class ChronometerPage implements OnInit {
   @Input("timer") timer: Timer;
+  @Input("trainingStart") trainingStart: training;
   time: BehaviorSubject<string> = new BehaviorSubject("00:00");
   percent: BehaviorSubject<number> = new BehaviorSubject(100);
   t: number; //in seconds
   bt: number;
+  round;
+  tround:Time;
+  btround:Time;
   text;
   totalTime;
   totalBTime;
@@ -26,18 +32,46 @@ export class ChronometerPage implements OnInit {
   circleR = circleR;
   circleDasharray = circleDasharray;
   countRound = 1;
-  state:  'stop' | 'resume' | 'finish' = 'finish';
+  state: 'stop' | 'resume' | 'finish' = 'finish';
   constructor(private modalController: ModalController) { }
 
   ngOnInit() {
-    console.log(this.timer);  
+    
+    if (this.timer == undefined) {
+      this.round = 1;
+      if (this.trainingStart != undefined) {
+        if (this.trainingStart.time < 60) {
+            this.tround={
+              min:0,
+              s:0
+            }
+          this.btround={
+            min:0,
+            s:this.trainingStart.time
+          } 
+        } else {
+          this.tround={
+            min:0,
+            s:0
+          }
+          this.btround ={
+            min:parseInt((this.trainingStart.time / 60).toFixed()),
+            s:(this.trainingStart.time % 60)
+          } 
+        }
+      }
+    }else{
+      this.round = this.timer.round;
+      this.tround=this.timer.tRounds;
+      this.btround=this.timer.bTime;
+    }
   }
   startTime(duration: number) {
     this.state = 'resume';
-    if (this.countRound <= this.timer.round) {
+    if (this.countRound <= this.round) {
       clearInterval(this.interval);
-       this.t = duration * ((this.timer.tRounds.min * 60) + this.timer.tRounds.s);
-    this.bt = duration * ((this.timer.bTime.min * 60) + this.timer.bTime.s);
+      this.t = duration * ((this.tround.min * 60) + this.tround.s);
+      this.bt = duration * ((this.btround.min * 60) + this.btround.s);
       this.updateTimeValue();
       this.interval = setInterval(() => {
         this.updateTimeValue();
@@ -45,8 +79,8 @@ export class ChronometerPage implements OnInit {
 
     } else {
       this.stopTimer();
-      
-  //  this.modalController.dismiss();
+
+      //  this.modalController.dismiss();
     }
 
   }
@@ -61,7 +95,7 @@ export class ChronometerPage implements OnInit {
     s = String('0' + Math.floor(s)).slice(-2);
     this.text = m + ':' + s;
     this.time.next(this.text);
-    this.totalTime = this.startDuration * ((this.timer.tRounds.min * 60) + this.timer.tRounds.s);
+    this.totalTime = this.startDuration * ((this.tround.min * 60) + this.tround.s);
     const percentage = ((this.totalTime - this.t) / this.totalTime) * 100;
     this.percent.next(percentage);
     --this.t;
@@ -71,26 +105,26 @@ export class ChronometerPage implements OnInit {
   }
   stopTimer() {
     clearInterval(this.interval);
-    if (this.countRound > this.timer.round) {
+    if (this.countRound > this.round) {
       this.countRound = 1;
       this.time.next('00:00');
       this.percent.next(100);
       this.state = 'finish';
-    }else{
+    } else {
       this.time.next(this.text);
       this.state = 'stop';
     }
-    
+
   }
-  resume(){
-    this.state='resume';
+  resume() {
+    this.state = 'resume';
     clearInterval(this.interval);
+    this.updateTimeValue();
+    this.interval = setInterval(() => {
       this.updateTimeValue();
-      this.interval = setInterval(() => {
-        this.updateTimeValue();
-      }, 1000);
+    }, 1000);
   }
-  
+
   percentageOffset(percent) {
     const percentFloat = percent / 100;
     return circleDasharray * (1 - percentFloat);
@@ -105,7 +139,7 @@ export class ChronometerPage implements OnInit {
     this.text = m + ':' + s;
 
     this.time.next(this.text);
-    this.totalBTime = this.startDuration * ((this.timer.bTime.min * 60) + this.timer.bTime.s);
+    this.totalBTime = this.startDuration * ((this.btround.min * 60) + this.btround.s);
     const percentage = ((this.totalBTime - this.bt) / this.totalBTime) * 100;
     this.percent.next(percentage);
     --this.bt;

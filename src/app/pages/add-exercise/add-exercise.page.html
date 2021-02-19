@@ -14,18 +14,18 @@
       </ion-thumbnail>
     </ion-item>
     <ion-item >
-      <ion-label position="floating">Exercise</ion-label>
+      <ion-label position="floating">{{'EXERCISE.name' | translate}}</ion-label>
       <ion-input formControlName="exercise" type="text" ></ion-input>
     </ion-item>
       <ion-item >
-      <ion-label position="floating">Description</ion-label>
+      <ion-label position="floating">{{'EXERCISE.description' | translate}}</ion-label>
       <ion-input formControlName="description" type="text" ></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label>Type</ion-label>
-      <ion-select formControlName="type" interface="popover" >
-        <ion-select-option value="repetitions">Repetitions</ion-select-option>
-        <ion-select-option  value="time">Time</ion-select-option>
+      <ion-label>{{'EXERCISE.type' | translate}}</ion-label>
+      <ion-select  formControlName="type" [(ngModel)]="this.tipo"  interface="popover" >
+        <ion-select-option value="Repetitions">{{'EXERCISE.repetitions' | translate}}</ion-select-option>
+        <ion-select-option  value="Time">{{'EXERCISE.time' | translate}}</ion-select-option>
       </ion-select>
       <ion-button (click)="this.removeTRounds()" class="addRemove" slot="" shape="round">
         <ion-icon name="remove-circle-outline"></ion-icon>
@@ -35,9 +35,8 @@
         <ion-icon name="add-circle-outline"></ion-icon>
       </ion-button>
     </ion-item>
-    <ion-footer>
-      <ion-button type="submit" expand="block" shape="round">SAVE</ion-button>
-    </ion-footer>
+    
+      <ion-button class="bottom" type="submit" expand="block" shape="round">{{'EXERCISE.save' | translate}}</ion-button>
     </form>
     
 </ion-content>

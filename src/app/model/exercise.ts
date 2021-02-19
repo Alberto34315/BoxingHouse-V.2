@@ -3,11 +3,12 @@ import { user } from "./user";
 
 export interface exercise{
     id?:number,
-    nameExercise:String,
-    description:String,
-    type:String,
-    repTime:number,
-    creator:user,
+    nameExercise?:String,
+    description?:String,
+    type?:String,
+    repTime?:number,
+    creator?:user,
     photo?:String ,
-    trainings?:training[]
+    trainings?:training[],
+    isChecked?:boolean
 }

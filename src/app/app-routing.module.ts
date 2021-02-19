@@ -29,6 +29,18 @@ const routes: Routes = [
   {
     path: 'list-exercise',
     loadChildren: () => import('./pages/list-exercise/list-exercise.module').then( m => m.ListExercisePageModule)
+  },
+  {
+    path: 'select-exercise',
+    loadChildren: () => import('./pages/select-exercise/select-exercise.module').then( m => m.SelectExercisePageModule)
+  },
+  {
+    path: 'execute-training',
+    loadChildren: () => import('./pages/execute-training/execute-training.module').then( m => m.ExecuteTrainingPageModule)
+  },
+  {
+    path: 'start-training',
+    loadChildren: () => import('./pages/start-training/start-training.module').then( m => m.StartTrainingPageModule)
   }
 
 ];

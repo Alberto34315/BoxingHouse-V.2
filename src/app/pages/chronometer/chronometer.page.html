@@ -8,7 +8,7 @@
 
 <ion-content>
   
-  <p class="round">{{this.countRound}}/{{this.timer.round}}</p>
+  <p class="round">{{this.countRound}}/{{this.round}}</p>
   <ion-row class="ion-justify-content-center">
     <svg id="progress-circle" width="50vh" height="50vh" viewBox="0 0 200 200">
       <linearGradient id="linearColors1" x1="0" y1="0" x2="1" y2="1">
@@ -26,7 +26,7 @@
   <ion-footer class="footer">
     <ion-button *ngIf="state==='finish'" expand="block" shape="round" (click)="this.startTime(this.startDuration)"
       color="primary">
-      START
+      {{'CHRONOMETER.start' | translate}}
     </ion-button>
     <ion-button *ngIf="state==='resume'" expand="block" shape="round" (click)="this.stopTimer()" color="danger">
       STOP

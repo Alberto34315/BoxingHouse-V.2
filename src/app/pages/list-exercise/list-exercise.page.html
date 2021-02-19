@@ -1,19 +1,23 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar>    
+    <div >
     <ion-button shape="round" (click)="this.exit()" color="success">
       <ion-icon name="arrow-undo-outline"></ion-icon>
     </ion-button>
+     <div class="bottom2"> {{'EXERCISE.names' | translate}}</div></div>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-searchbar #input showCancelButton="focus" debounce="500" (ionChange)="searchPlayer($event)"></ion-searchbar>
+    <ion-searchbar #input showCancelButton="focus" debounce="500" (ionChange)="searchExercise($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="this.loadAll($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-list>
     <ion-item-sliding *ngFor="let item of exercises">
-      <!--<ion-item-options side="start" (click)="editItem(item)">-->
-      <ion-item-options side="start">
+      <ion-item-options side="start" (click)="editExercise(item)">
         <ion-item-option color="primary">
           <ion-icon slot="icon-only" name="create"></ion-icon>
         </ion-item-option>
