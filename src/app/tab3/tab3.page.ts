@@ -27,11 +27,10 @@ export class Tab3Page implements OnInit {
     private api: ApiService) { }
 
   ngOnInit() {
-    
     this.loadUser();
   }
-  ionViewDidEnter(){
-  }
+  
+  
   loadUser(){
     this.user = {
       id: this.authS.getUser().id,
