@@ -24,5 +24,5 @@
     </ion-slide>
    
   </ion-slides>
-  <ion-button (click)="this.openStartTraining()" class="bottom" expand="block" shape="round">{{'CHRONOMETER.start' | translate}}</ion-button>
+  <ion-button [disabled]="this.button" (click)="this.openStartTraining()" class="bottom" expand="block" shape="round">{{'CHRONOMETER.start' | translate}}</ion-button>
 </ion-content>

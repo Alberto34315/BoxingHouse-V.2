@@ -12,6 +12,7 @@ import { StartTrainingPage } from '../start-training/start-training.page';
 export class ExecuteTrainingPage implements OnInit {
   @Input("trainingExe") trainingExe: training;
   conditionType:boolean;
+  button:boolean;
   constructor(private modalController: ModalController,
     private timerS: TimerService) { }
 
@@ -22,6 +23,11 @@ export class ExecuteTrainingPage implements OnInit {
     } else {
       this.timerS.minBT = parseInt((this.trainingExe.time / 60).toFixed());
       this.timerS.sBT = (this.trainingExe.time % 60)
+    }
+    if(this.trainingExe.exercises.length==0){
+      this.button=true;
+    }else{
+      this.button=false;
     }
   }
   async openStartTraining(): Promise<any> {

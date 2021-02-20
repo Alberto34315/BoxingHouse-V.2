@@ -32,6 +32,7 @@ export class AddExercisePage implements OnInit {
   }
 
   ngOnInit() {
+    this.galleryS.myphoto='./assets/imgs/imgDefault.png'
     this.loadExercise()
   }
   loadExercise() {

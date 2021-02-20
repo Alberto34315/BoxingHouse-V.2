@@ -27,9 +27,10 @@ export class Tab3Page implements OnInit {
     private api: ApiService) { }
 
   ngOnInit() {
-  }
-  ionViewWillEnter(){
+    
     this.loadUser();
+  }
+  ionViewDidEnter(){
   }
   loadUser(){
     this.user = {

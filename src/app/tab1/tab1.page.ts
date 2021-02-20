@@ -141,7 +141,7 @@ export class Tab1Page {
         .catch(async err => {
           console.log(err)
         })
-    }, 300);
+    }, 500);
   }
 
 
