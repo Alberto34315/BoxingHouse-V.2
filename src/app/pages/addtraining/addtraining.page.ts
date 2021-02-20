@@ -133,7 +133,7 @@ export class AddtrainingPage implements OnInit {
             creator: this.authS.getUser(),
             type: element.type,
             repTime: element.repTime,
-            trainings: element.trainings
+            t: element.t
           }
 
           console.log("Mirar: " + e.type)

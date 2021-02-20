@@ -15,7 +15,7 @@ import { PresentService } from 'src/app/services/present.service';
 export class AddExercisePage implements OnInit {
   @Input("exerciseEdit") exerciseEdit: exercise;
   num = 1;
-  public tipo:String="repetitions";
+  public tipo:String="Repetitions";
   public task: FormGroup;
   exercise: exercise;
   constructor(private authS: AuthService,
@@ -44,7 +44,7 @@ export class AddExercisePage implements OnInit {
         type: this.exerciseEdit.type,
         repTime: this.exerciseEdit.repTime,
         creator: this.authS.getUser(),
-        trainings: this.exerciseEdit.trainings
+        t: this.exerciseEdit.t
       }
       this.task = this.formBuilder.group({
         exercise: [this.exerciseEdit.nameExercise, Validators.required],
@@ -55,13 +55,13 @@ export class AddExercisePage implements OnInit {
       this.num=this.exerciseEdit.repTime
     } else {
       this.exercise = {
-        photo: '',
+        photo: './assets/imgs/imgDefault.png',
         nameExercise: '',
         description: '',
         type: '',
         repTime: this.num,
         creator: this.authS.getUser(),
-        trainings: []
+        t: []
       }
     }
   }
@@ -91,7 +91,7 @@ export class AddExercisePage implements OnInit {
         type: this.task.get('type').value,
         repTime: this.num,
         creator: this.authS.getUser(),
-        trainings:this.exerciseEdit.trainings
+        t:this.exerciseEdit.t
       }
       
       this.api.createExercise(this.exercise).then((respuesta) => {

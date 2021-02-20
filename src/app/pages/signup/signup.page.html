@@ -12,20 +12,33 @@
 </ion-header>
 
 <ion-content>
-  <h1>Create your<br />Account</h1>
+  <h1>{{'SIGNUP.create' | translate}}<br />{{'SIGNUP.count' | translate}}</h1>
 
   <form id="form" [formGroup]="task" (ngSubmit)="this.sendForm()">
     <ion-item>
-      <ion-input formControlName="name" placeholder="Your Name"></ion-input>
+      <ion-input [class.is-invalid] = "Name.invalid && Name.touched" formControlName="name" placeholder="Your Name"></ion-input>
     </ion-item>
+    <div *ngIf="(Name.invalid && Name.touched) || Name.dirty">
+      <small *ngIf="Name.errors?.required" class="text-danger">{{'SIGNUP.name' | translate}}</small>
+    </div> 
     <ion-item>
-      <ion-input formControlName="email" placeholder="Email"></ion-input>
+      <ion-input [class.is-invalid] = "Email.invalid && Email.touched"
+       formControlName="email" type="email" placeholder="Email"></ion-input>
     </ion-item>
+      <div *ngIf="(Email.invalid && Email.touched) || Email.dirty">
+        <small *ngIf="Email.errors?.required" class="text-danger">{{'SIGNUP.emailR' | translate}}</small>
+        <small *ngIf="Email.errors?.email" class="text-danger">{{'SIGNUP.email' | translate}}</small>
+      </div>
     <ion-item>
-      <ion-input formControlName="pass" type="password" placeholder="Password"></ion-input>
-    </ion-item>    
-    <ion-button type="submit" expand="block" shape="round">Join Us</ion-button>
+      <ion-input [class.is-invalid] = "Pass.invalid && Pass.touched" formControlName="pass" type="password" placeholder="Password"></ion-input>
+    </ion-item>   
+    <div *ngIf="(Pass.invalid && Pass.touched) || Pass.dirty">
+      <small *ngIf="Pass.errors?.required" class="text-danger">{{'SIGNUP.passR' | translate}}</small>
+      <small *ngIf="Pass.errors?.minlength" class="text-danger">{{'SIGNUP.pass' | translate}}</small>
+      <small *ngIf="Pass.errors?.pattern" class="text-danger">{{'SIGNUP.passPatt' | translate}}</small>
+    </div> 
+    <ion-button [disabled]="!task.valid" type="submit" expand="block" shape="round">{{'SIGNUP.join' | translate}}</ion-button>
   </form>
 
-  <p>By pressing 'Join Us' you agree to <br />our terms & conditions.</p>
+  <p>{{'SIGNUP.pressJoin' | translate}} <br />{{'SIGNUP.terms' | translate}}</p>
 </ion-content>

@@ -19,11 +19,20 @@ export class SignupPage implements OnInit {
     private router: Router) {
     this.task = this.formBuilder.group({
       name: ['', Validators.required],
-      email: ['', Validators.required],
-      pass: ['', Validators.required]
+      email: ['', [Validators.required,Validators.email]],
+      pass: ['', [Validators.required,Validators.minLength(8),Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$')]]
     })
+  
   }
-
+  get Email(){
+    return this.task.get('email')
+    }
+    get Pass(){
+      return this.task.get('pass')
+      }
+      get Name(){
+        return this.task.get('name')
+        }
   ngOnInit() {
   }
   public async sendForm() {
@@ -46,7 +55,7 @@ export class SignupPage implements OnInit {
           name: this.task.get('name').value,
           email: email,
           pass: hash,
-          avatar: "photo"
+          avatar: "./assets/imgs/imgDefault.png"
         }
         this.api.createUser(this.data).then((respuesta) => {
           this.task.setValue({

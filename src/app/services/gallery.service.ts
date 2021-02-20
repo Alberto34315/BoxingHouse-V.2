@@ -7,7 +7,7 @@ import { FileTransfer, FileUploadOptions, FileTransferObject} from '@ionic-nativ
   providedIn: 'root'
 })
 export class GalleryService {
-  myphoto:any;
+  myphoto:any="./assets/imgs/imgDefault.png";
   croppedImagepath = "";
   isLoading = false;
 
@@ -54,7 +54,7 @@ export class GalleryService {
     });
   }
 
-  cropImage() {
+  cropImage():Promise<void> {
     const options: CameraOptions = {
       quality: 70,
       destinationType: this.camera.DestinationType.DATA_URL,
@@ -65,7 +65,7 @@ export class GalleryService {
       targetHeight:300
     }
 
-    this.camera.getPicture(options).then((imageData) => {
+    return this.camera.getPicture(options).then((imageData) => {
       // imageData is either a base64 encoded string or a file URI
       // If it's base64:
       this.myphoto = 'data:image/jpeg;base64,' + imageData;

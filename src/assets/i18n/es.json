@@ -29,6 +29,22 @@
     },
     "CHRONOMETER":{
         "start":"COMENZAR"
+    },
+    "SIGNUP":{
+        "emailR":"El correo electrónico es obligatorio",
+        "email":"Por favor ingrese su dirección de correo electrónico válida",
+        "passR":"La contraseña es requerida",
+        "pass":"La contraseña debe tener al menos 8 caracteres. ",
+        "passPatt":"La contraseña debe tener al menos una letra y un número. ",
+        "name":"El nombre es obligatorio",
+        "create":"Crea tu",
+        "count":"cuenta",
+        "join":"Únete a nosotros",
+        "pressJoin":"Al presionar 'Únase a nosotros', acepta",
+        "terms":"nuestros términos y condiciones."
+    },
+    "LOGIN":{
+        "login":"Iniciar sesión"
     }
     
 }

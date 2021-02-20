@@ -9,6 +9,6 @@ export interface exercise{
     repTime?:number,
     creator?:user,
     photo?:String ,
-    trainings?:training[],
+    t?:training[],
     isChecked?:boolean
 }

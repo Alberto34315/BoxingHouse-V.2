@@ -29,5 +29,21 @@
     },
     "CHRONOMETER":{
         "start":"START"
+    },
+    "SIGNUP":{
+        "emailR":"The email is required",
+        "email":"Please provide a valid email address",
+        "passR":"The password is required",
+        "pass":"Password must be at least 8 characters. ",
+        "passPatt":"The password must have at least one letter and one number. ",
+        "name":"The name is required",
+        "create":"Create your",
+        "count":"Account",
+        "join":"Join Us",
+        "pressJoin":"By pressing 'Join Us' you agree to",
+        "terms":"our terms & conditions."
+    },
+    "LOGIN":{
+        "login":"Login"
     }
 }

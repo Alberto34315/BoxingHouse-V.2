@@ -18,7 +18,7 @@ export class Tab1Page {
   trainings: training[]
   @ViewChild('input', { static: false }) myInput: IonSearchbar;
   constructor(private api: ApiService,
-    private authS:AuthService,
+    private authS: AuthService,
     private modalController: ModalController,
     private present: PresentService) { }
 
@@ -43,13 +43,13 @@ export class Tab1Page {
     await this.openAddTraining();
     await this.loadAll();
   }
-  async editraining(t:training) {
+  async editraining(t: training) {
     await this.openAddTraining(t);
     await this.loadAll();
   }
-  
-  async openAddTraining(t?:any): Promise<any> {
-  if(t==undefined){
+
+  async openAddTraining(t?: any): Promise<any> {
+    if (t == undefined) {
       t = {
         title: "",
         creator: this.authS.getUser(),
@@ -57,7 +57,7 @@ export class Tab1Page {
         exercises: []
       }
     }
-  
+
     const modal = await this.modalController.create({
       component: AddtrainingPage,
       cssClass: 'my-custom-class',
@@ -76,14 +76,14 @@ export class Tab1Page {
     const modal = await this.modalController.create({
       component: AddExercisePage,
       cssClass: 'my-custom-class',
-      
+
     });
-    
+
     await modal.present();
     return await modal.onWillDismiss();
   }
-  async openExecuteTraining(t?:any): Promise<any> {
-   
+  async openExecuteTraining(t?: any): Promise<any> {
+
     const modal = await this.modalController.create({
       component: ExecuteTrainingPage,
       cssClass: 'my-custom-class',
@@ -91,7 +91,7 @@ export class Tab1Page {
         trainingExe: t
       }
     });
-    
+
     await modal.present();
     return await modal.onWillDismiss();
   }
@@ -105,7 +105,7 @@ export class Tab1Page {
       cssClass: 'my-custom-class',
 
     });
-    
+
     await modal.present();
     return await modal.onWillDismiss();
   }
@@ -115,7 +115,7 @@ export class Tab1Page {
     value = value.trim();
     if (value !== '') {
       //await this.ui.showLoading();
-      this.api.searchByTitle(value,this.authS.getUser().id)
+      this.api.searchByTitle(value, this.authS.getUser().id)
         .then(d => {
           this.trainings = d;
         })
@@ -130,12 +130,18 @@ export class Tab1Page {
   }
   public async removeTraining(item: training) {
     await this.present.presentLoading;
-    item.exercises.forEach(element => {
-    this.api.deleteFromListExercise(item,element).then(d=>{}).catch(err=>{});
-    });
-    this.api.removeTraining(item).then(async d => await this.loadAll())
-      .catch(async err => await this.present.presentToast(err.error, "danger")
-        .finally(async () => { await this.present.dismissLoad() }))
+    if (item.exercises != undefined) {
+      await item.exercises.forEach(element => {
+        this.api.deleteFromListExercise(item, element).then(d => { }).catch(err => { });
+      });
+    }
+
+    setTimeout(() => {
+      this.api.removeTraining(item).then(async d => await this.loadAll())
+        .catch(async err => {
+          console.log(err)
+        })
+    }, 300);
   }
 
 
