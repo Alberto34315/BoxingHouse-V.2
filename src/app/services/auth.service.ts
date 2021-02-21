@@ -16,9 +16,10 @@ export class AuthService {
   };
   constructor(private storage: NativeStorage,
     private router:Router) { }
-
+    /**
+     * Carga al usuario cuando inicia la aplicacion
+     */
     async init() {
-      //  console.log("AL INICIO DE LOS TIEMPOS")
         let u = null;
         try {
           u = await this.storage.getItem("user");
@@ -29,6 +30,9 @@ export class AuthService {
           this.user = u;
         }
       }
+      /**
+       * Método que te dice si hay un usuario logeado
+       */
       public isLogged(): boolean {
         if (this.user.id == -1) {
           return false;
@@ -36,6 +40,10 @@ export class AuthService {
           return true;
         }
       }
+
+      /**
+       * Metodo para cerrar sesión
+       */
       public async logout(){
         this.user = {
           id: -1,
@@ -46,12 +54,13 @@ export class AuthService {
         }
         await this.storage.setItem("user",this.user);
       }
+      /**
+       * Metodo para iniciar sesión
+       * @param u recibe un user
+       */
       public async login(u:user) {
         try {
-          
-        //  console.log(u)
           if (u) {
-         //   console.log("OK")
             this.user = {
               id: u['id'],
               name: u['name'],
@@ -59,7 +68,6 @@ export class AuthService {
               pass: u['pass'],
               email:u['email']
             }
-           // console.log(this.user);
           }
         } catch (err) {
           this.user = {
@@ -74,17 +82,29 @@ export class AuthService {
         return this.user;
       }
 
+      /**
+       * Comprueba si el usuario esta logueado lo lleva la pagina de inicio y si no esta logueado
+       * lo lleva a la pagina de login
+       * @param route recibe un ActivatedRouteSnapshot
+       */
       canActivate(route: ActivatedRouteSnapshot): boolean {
-        // console.log("ESTOY EN CANACTIVATE Y EL RESULT ES "+this.isLogged())
          if (!this.isLogged()) {
            this.router.navigate(["login"]);
            return false;
          }
          return true;
        }
+       /**
+        * Metodo que devuelve un usuario
+        */
        getUser(){
          return this.user;
        }
+
+       /**
+        * Metodo para modificar al usuario
+        * @param u recibe un user
+        */
        setUser(u:user){
        this.storage.setItem("user",u);
        }

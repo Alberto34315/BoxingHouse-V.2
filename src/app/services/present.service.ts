@@ -8,7 +8,10 @@ export class PresentService {
 
   constructor(private loadingController: LoadingController,
     private toastController: ToastController) { }
-    
+
+  /**
+   * Funcion que ejecuta el Loading
+   */
   async presentLoading() {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
@@ -17,6 +20,11 @@ export class PresentService {
     });
     await loading.present();
   }
+  /**
+   * Funcion que muestra un toast
+   * @param msg msg Mensaje del toast
+   * @param col color del toast
+   */
   async presentToast(msg: string, col: string) {
     const toast = await this.toastController.create({
       message: msg,
@@ -26,6 +34,10 @@ export class PresentService {
     });
     toast.present();
   }
+
+ /**
+ * Funcion que detiene el Loading
+ */
   async dismissLoad() {
     this.loadingController.dismiss();
   }

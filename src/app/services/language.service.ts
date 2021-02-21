@@ -11,6 +11,9 @@ export class LanguageService {
   constructor(private translate: TranslateService,
     private storage: NativeStorage) { }
 
+    /**
+     * Inicia la aplicacion con el idioma del dispositivo o con el idioma seleccionado
+     */
   public setInitialAppLanguage() {
     let language = this.translate.getBrowserLang();
     this.translate.setDefaultLang(language);
@@ -21,13 +24,19 @@ export class LanguageService {
       }
     });
   }
-
+  /**
+   * Devuelve los idiomas 
+   */
   public getLanguages() {
     return [
       { text: "English", value: "en",img:"assets/imgs/espana.png" },
       { text: "Spanish", value: "es",img:"assets/imgs/reino-unido.svg" }
     ]
   }
+  /**
+   * Modifica el idioma
+   * @param lng recibe un idioma
+   */
   public setLanguage(lng) {
     this.translate.use(lng);
     this.selected=lng;

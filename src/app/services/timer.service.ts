@@ -9,7 +9,9 @@ export class TimerService {
   minBT:number=0;
   sBT:number=5;
   constructor() { }
-
+  /**
+   * Añade tiempo de la ronda
+   */
   addTRounds(){
     this.s++;
     if(this.s>59){
@@ -17,6 +19,9 @@ export class TimerService {
       this.min++;
     }
   }
+  /**
+   * Elimina tiempo de la ronda
+   */
   removeTRounds(){
     if(this.min==0 && this.s==5){
       this.s=5;
@@ -28,6 +33,9 @@ export class TimerService {
     }
   }
 
+  /**
+   * Añade tiempo de descanso
+   */
   addBTime(){
     this.sBT++;
     if(this.sBT>59){
@@ -35,6 +43,9 @@ export class TimerService {
       this.minBT++;
     }
   }
+  /**
+   * Elimina Tiempo de descanso
+   */
   removeBTime(){
     if(this.minBT==0 && this.sBT==5){
       this.sBT=5;

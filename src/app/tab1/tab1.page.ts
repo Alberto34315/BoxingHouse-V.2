@@ -114,15 +114,13 @@ export class Tab1Page {
     let value = $event.detail.value;
     value = value.trim();
     if (value !== '') {
-      //await this.ui.showLoading();
       this.api.searchByTitle(value, this.authS.getUser().id)
         .then(d => {
           this.trainings = d;
         })
         .catch(async err => await this.present.presentToast(err.error, "danger"))
         .finally(async () => {
-          // await this.ui.hideLoading();
-          // this.myInput.setFocus();
+          
         });
     } else {
       await this.loadAll();
