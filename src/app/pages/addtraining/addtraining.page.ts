@@ -45,7 +45,8 @@ export class AddtrainingPage implements OnInit {
       this.task = this.formBuilder.group({
         title: [this.trainingEdit.title, Validators.required]
       })
-      console.log(this.trainingEdit.time)
+      
+      console.log(this.training.exercises)
       if (this.trainingEdit.time < 60) {
         this.timerS.minBT = 0;
         this.timerS.sBT = this.trainingEdit.time
@@ -87,12 +88,6 @@ export class AddtrainingPage implements OnInit {
   }
   
   async selecExercise(): Promise<any> {
-    /* this.training = {
-       title: this.task.get('title').value,
-       time: (this.timerS.minBT * 60) + this.timerS.sBT,
-       exercises: this.exercises,
-       creator: this.authS.getUser()
-     }*/
     const modal = await this.modalController.create({
       component: SelectExercisePage,
       cssClass: 'my-custom-class',
@@ -109,7 +104,7 @@ export class AddtrainingPage implements OnInit {
     this.timerS.sBT = 5;
   }
 
-  /*Arreglar Update */
+  
   public async save() {
     await this.present.presentLoading();
 
@@ -122,7 +117,7 @@ export class AddtrainingPage implements OnInit {
         exercises: this.training.exercises,
         creator: this.authS.getUser()
       }
-      console.log(this.training)
+      
       this.api.updateTraining(this.training).then(result => {
         this.training.exercises.forEach(element => {
           let e: exercise = {
@@ -135,12 +130,9 @@ export class AddtrainingPage implements OnInit {
             repTime: element.repTime,
             t: element.t
           }
-
-          console.log("Mirar: " + e.type)
+          console.log(e)
           this.api.updateExercise(e).then(result => { }).catch(err => { })
         });
-
-        //console.log(result)
         this.present.dismissLoad();
         this.exit();
       }).catch(err => {

@@ -16,6 +16,9 @@
     <ion-list>
       <ion-item *ngFor="let entry of  this.training.exercises">
         <ion-label>
+       
+          <ion-item>
+            <ion-button (click)="this.removeExercise(entry)"  color="light"><ion-icon name="close-outline"></ion-icon></ion-button>
           <ion-item>
             <ion-thumbnail slot="start">
               <ion-img [src]="entry.photo"></ion-img>
@@ -24,8 +27,8 @@
               <h1>{{entry.nameExercise}}</h1>
               {{entry.description}}
             </div>
-            <ion-button (click)="this.removeExercise(entry)" style="margin-left: 15%;" color="light"><ion-icon name="close-outline"></ion-icon></ion-button>
           </ion-item>
+        </ion-item>
         </ion-label>
       </ion-item>
     </ion-list>
