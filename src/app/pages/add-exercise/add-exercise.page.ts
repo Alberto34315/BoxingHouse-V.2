@@ -93,8 +93,7 @@ export class AddExercisePage implements OnInit {
         description: this.task.get('description').value,
         type: this.task.get('type').value,
         repTime: this.num,
-        creator: this.authS.getUser()/*,
-        t: this.exerciseEdit.t*/
+        creator: this.authS.getUser()
       }
 
       this.api.updateExercise(this.exercise).then((respuesta) => {
@@ -103,23 +102,13 @@ export class AddExercisePage implements OnInit {
           description: '',
           type: ''
         })
-        /*this.exercise.t.forEach(element => {
-          let e: training = {
-            id: element.id,
-            title: element.title,
-            time: element.time,
-            creator: this.authS.getUser()
-          }
-          
-          this.api.updateTraining(e).then(result => { }).catch((err) => { });
-        })*/
+
         this.present.dismissLoad();
         this.exit();
       }).catch((err) => {
       });
 
     } else {
-      // this.exercise.photo
       this.exercise = {
         photo: this.galleryS.myphoto,
         nameExercise: this.task.get('exercise').value,
