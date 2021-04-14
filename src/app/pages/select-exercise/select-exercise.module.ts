@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { SelectExercisePageRoutingModule } from './select-exercise-routing.module';
 
 import { SelectExercisePage } from './select-exercise.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { SelectExercisePage } from './select-exercise.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    SelectExercisePageRoutingModule
+    SelectExercisePageRoutingModule,
+    TranslateModule
   ],
   declarations: [SelectExercisePage]
 })

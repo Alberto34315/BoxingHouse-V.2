@@ -18,12 +18,12 @@
   </div>
 
   <form id="form" [formGroup]="task" (ngSubmit)="this.sendForm()">
-    <ion-item>
+    <ion-item class="input">
       <ion-input formControlName="email" placeholder="Email"></ion-input>
     </ion-item>
     <ion-item>
       <ion-input formControlName="pass" type="password" placeholder="Password"></ion-input>
     </ion-item>    
-    <ion-button type="submit" expand="block" shape="round">Login</ion-button>
+    <ion-button [disabled]="!task.valid" type="submit" expand="block" shape="round">Login</ion-button>
   </form>
 </ion-content>

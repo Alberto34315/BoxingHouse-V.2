@@ -4,10 +4,12 @@
 
 export const environment = {
   production: false,
-  endpoint:'https://apirestfulbh.herokuapp.com/',
+ //endpoint:'https://apirestfulbh.herokuapp.com/',
+  endpoint:'http://panel.hostemy.com:2004/',
   apiExercise:'exercise/',
   apiUser:'user/',
-  apiTraining:'training/'
+  apiTraining:'training/',
+  apiRecord:'records/'
 };
 
 /*

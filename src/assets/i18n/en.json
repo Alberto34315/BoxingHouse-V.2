@@ -12,10 +12,19 @@
     },
     "TAB3": {
         "profile": "Profile",
-        "logout": "Sign off"
+        "logout": "Sign off",
+        "historical":"Historical",
+        "graph":"Graph"
+    },
+    "TAB4": {
+        "publications":"Publications",
+        "friends":"Friends",
+        "addFriend":"Add Friends"
     },
     "TRAINING":{
-        "title":"Title"
+        "title":"Title",
+        "publish":"Publish",
+        "finalize":"Finalize"
     },
     "EXERCISE":{
         "name":"Exercise",

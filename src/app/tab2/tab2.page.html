@@ -11,40 +11,46 @@
 <ion-content [fullscreen]="true">
   <ion-item class="tab2">
     <ion-label>{{'TAB2.rounds' | translate}}:
-      <ion-button (click)="this.removeRound()" class="addRemove" slot="start" shape="round">
-      <ion-icon name="remove-circle-outline"></ion-icon>
-    </ion-button> 
-    {{this.round}}
-      <ion-button (click)="this.addRound()" class="addRemove" slot="start" shape="round">
-      <ion-icon name="add-circle-outline"></ion-icon>
-    </ion-button>
-  </ion-label>
+      <ion-button (press)="this.removeRoundPress()" (click)="this.removeRound()" (pressup)="this.clearPress()"
+        (pan)="this.clearPress()" class="addRemove" slot="start" shape="round">
+        <ion-icon name="remove-circle-outline"></ion-icon>
+      </ion-button>
+      {{this.round}}
+      <ion-button (press)="this.addRoundPress()" (click)="this.addRound()" (pressup)="this.clearPress()"
+        (pan)="this.clearPress()" class="addRemove" slot="start" shape="round">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-label>
   </ion-item>
   <ion-item class="tab2">
     <ion-label>{{'TAB2.roundsT' | translate}}:
-      <ion-button (click)="this.removeTRounds()" class="addRemove" slot="start" shape="round">
+      <ion-button (press)="this.removeTRoundsPress()" (click)="this.removeTRounds()" (pressup)="this.clearPress()"
+        (pan)="this.clearPress()" class="addRemove" slot="start" shape="round">
         <ion-icon name="remove-circle-outline"></ion-icon>
-      </ion-button> 
-      {{this.timerS.min}}:{{this.timerS.s}}
-        <ion-button (click)="this.addTRounds()" class="addRemove" slot="start" shape="round">
+      </ion-button>
+      {{time|async}}
+      <ion-button (press)="this.addTRoundsPress()" (click)="this.addTRounds()" (pressup)="this.clearPress()"
+        (pan)="this.clearPress()" class="addRemove" slot="start" shape="round">
         <ion-icon name="add-circle-outline"></ion-icon>
       </ion-button>
     </ion-label>
   </ion-item>
   <ion-item class="tab2">
     <ion-label>{{'TAB2.breakT' | translate}}:
-      <ion-button (click)="this.removeBTime()" class="addRemove" slot="start" shape="round">
+      <ion-button (press)="this.removeBTimePress()" (click)="this.removeBTime()" (pressup)="this.clearPress()"
+        (pan)="this.clearPress()" class="addRemove" slot="start" shape="round">
         <ion-icon name="remove-circle-outline"></ion-icon>
-      </ion-button> 
-      {{this.timerS.minBT}}:{{this.timerS.sBT}}
-        <ion-button (click)="this.addBTime()" class="addRemove" slot="start" shape="round">
+      </ion-button>
+      {{bTime|async}}
+      <ion-button (press)="this.addBTimePress()" (click)="this.addBTime()" (pressup)="this.clearPress()"
+        (pan)="this.clearPress()" class="addRemove" slot="start" shape="round">
         <ion-icon name="add-circle-outline"></ion-icon>
       </ion-button>
     </ion-label>
   </ion-item>
 
   <ion-item>
-    
+
     <ion-button (click)="this.reset()" class="bCleStar" slot="start" shape="round">
       <ion-icon class="clear" name="close-circle-outline"></ion-icon>
       {{'TAB2.clean' | translate}}

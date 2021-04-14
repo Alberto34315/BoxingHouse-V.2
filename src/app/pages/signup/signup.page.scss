@@ -33,7 +33,15 @@ ion-toolbar {
         --box-shadow: none;
       }
     }
-  
+    .input{
+      margin-bottom: 15px;
+    }
+    .input-top{
+      margin-top: 10px;
+    }
+    .text-danger{
+      color: rgb(230, 7, 7);
+    }
     p {
       text-align: center;
       color: #b6b6b6;

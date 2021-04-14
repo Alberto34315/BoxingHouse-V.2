@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <div style="display: flex;">
+      <ion-button shape="round" (click)="this.exit()" color="success">
+        <ion-icon name="arrow-undo-outline"></ion-icon>
+      </ion-button>
+      <ion-title>{{'TAB4.addFriend' | translate}}</ion-title>
+    </div>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar #input showCancelButton="focus" debounce="500" (ionChange)="searchUsers($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content> 
+  <form id="form" [formGroup]="task" (ngSubmit)="this.save()">
+  <ion-list>
+    <ion-item *ngFor="let u of users">
+      <ion-label>
+        <ion-item>
+          <ion-thumbnail (click)="this.setAvatar()" slot="start">
+            <ion-img [src]="u.avatar"></ion-img>
+          </ion-thumbnail>
+          <div>
+            <h1>{{u.name}}</h1>
+          </div>
+        </ion-item>
+      </ion-label>
+      <ion-checkbox (click)="u.isChecked=$event.currentTarget.checked" formControlName="check" slot="end"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <ion-button class="bottom" type="submit" expand="block" shape="round">{{'EXERCISE.save' | translate}}
+  </ion-button>
+</form>
+</ion-content>

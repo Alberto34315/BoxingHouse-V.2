@@ -12,10 +12,19 @@
     },
     "TAB3": {
         "profile": "Perfil",
-        "logout": "Cerrar Sesión"
+        "logout": "Cerrar Sesión",
+        "historical":"Historial",
+        "graph":"Gráfica"
+    },
+    "TAB4": {
+        "publications":"Publicaciones",
+        "friends":"Amigos",
+        "addFriend":"Añadir amigos"
     },
     "TRAINING":{
-        "title":"Título"
+        "title":"Título",
+        "publish":"Publicar",
+        "finalize":"Finalizar"
     },
     "EXERCISE":{
         "name":"Ejercicio",

@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
 import { exercise } from 'src/app/model/exercise';
 import { training } from 'src/app/model/training';
+import { user } from 'src/app/model/user';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { PresentService } from 'src/app/services/present.service';
@@ -19,9 +21,15 @@ export class AddtrainingPage implements OnInit {
   @Input("trainingEdit") trainingEdit: training;
   training: training
   public task: FormGroup;
-
+  public isPublic: boolean = false;
   exercise: exercise;
   exercises: exercise[] = [];
+  text;
+  mbt;
+  sbt;
+  timeout;
+  interval;
+  bTime: BehaviorSubject<string> = new BehaviorSubject("00:00");
   constructor(private modalController: ModalController,
     private authS: AuthService,
     private api: ApiService,
@@ -29,24 +37,27 @@ export class AddtrainingPage implements OnInit {
     private present: PresentService,
     private timerS: TimerService) {
     this.task = this.formBuilder.group({
-      title: ['', Validators.required]
+      title: ['', Validators.required],
+      publish: [this.isPublic]
     })
   }
 
   ngOnInit() {
+    this.reset()
     if (this.trainingEdit.id != undefined) {
+      this.isPublic = this.trainingEdit.published;
       this.training = {
         id: this.trainingEdit.id,
         title: this.trainingEdit.title,
         creator: this.authS.getUser(),
         time: this.trainingEdit.time,
+        published: this.trainingEdit.published,
         exercises: this.trainingEdit.exercises
       }
       this.task = this.formBuilder.group({
-        title: [this.trainingEdit.title, Validators.required]
+        title: [this.trainingEdit.title, Validators.required],
+        publish: [this.trainingEdit.published]
       })
-      
-      console.log(this.training.exercises)
       if (this.trainingEdit.time < 60) {
         this.timerS.minBT = 0;
         this.timerS.sBT = this.trainingEdit.time
@@ -59,6 +70,7 @@ export class AddtrainingPage implements OnInit {
         title: "",
         creator: this.authS.getUser(),
         time: 0,
+        published: false,
         exercises: []
       }
     }
@@ -66,10 +78,35 @@ export class AddtrainingPage implements OnInit {
 
   addBTime() {
     this.timerS.addBTime();
+    this.loadBTime();
+  } 
+  addBTimePress() {
+    this.timeout = setTimeout(() => {
+      this.interval = setInterval(() => {
+        this.timerS.addBTime();
+        this.loadBTime();
+      }, 50);
+    }, 300);
+  }
+  removeBTimePress() {
+    this.timeout = setTimeout(() => {
+      this.interval = setInterval(() => {
+        this.timerS.removeBTime();
+        this.loadBTime();
+      }, 50);
+    }, 300);
   }
 
   removeBTime() {
     this.timerS.removeBTime();
+    this.loadBTime();
+  }
+
+  loadBTime() {
+    this.mbt = String('0' + Math.floor(this.timerS.minBT)).slice(-2);
+    this.sbt = String('0' + Math.floor(this.timerS.sBT)).slice(-2);
+    this.text = this.mbt + ':' + this.sbt;
+    this.bTime.next(this.text);
   }
 
   removeExercise(exer: exercise) {
@@ -86,7 +123,7 @@ export class AddtrainingPage implements OnInit {
       console.log(err)
     })
   }
-  
+
   async selecExercise(): Promise<any> {
     const modal = await this.modalController.create({
       component: SelectExercisePage,
@@ -99,21 +136,23 @@ export class AddtrainingPage implements OnInit {
     await modal.present();
     return await modal.onWillDismiss();
   }
-  reset() {
-    this.timerS.minBT = 0;
-    this.timerS.sBT = 5;
-  }
 
-  
   public async save() {
     await this.present.presentLoading();
 
     if (this.trainingEdit.id != undefined) {
 
+      this.api.getAllFriends(this.authS.getUser().id).then(result=>{
+          this.authS.getUser().friends=result
+      }).catch(err => {
+        console.log(err)
+      });
+     
       this.training = {
         id: this.trainingEdit.id,
         title: this.task.get('title').value,
         time: (this.timerS.minBT * 60) + this.timerS.sBT,
+        published: this.isPublic,
         exercises: this.training.exercises,
         creator: this.authS.getUser()
       }
@@ -130,9 +169,10 @@ export class AddtrainingPage implements OnInit {
             repTime: element.repTime,
             t: element.t
           }
-          console.log(e)
+          
           this.api.updateExercise(e).then(result => { }).catch(err => { })
         });
+        this.reset()
         this.present.dismissLoad();
         this.exit();
       }).catch(err => {
@@ -152,17 +192,18 @@ export class AddtrainingPage implements OnInit {
       this.training = {
         title: this.task.get('title').value,
         time: (this.timerS.minBT * 60) + this.timerS.sBT,
+        published: this.isPublic,
         exercises: exId,
         creator: {
           id: this.authS.getUser().id,
         }
       }
       this.api.createTraning(this.training).then((respuesta) => {
-        console.log(this.training)
-        this.task.setValue({
-          title: ''
-        })
         this.reset()
+        this.task.setValue({
+          title: '',
+          publish: false
+        })
         this.present.dismissLoad();
         this.exit();
       }).catch((err) => {
@@ -171,7 +212,24 @@ export class AddtrainingPage implements OnInit {
       });
     }
   }
-
+ 
+  clearPress() { //Cuando se termine de pulsar
+    clearTimeout(this.timeout); //Limpiamos el timeout
+    clearInterval(this.interval); //Limpiamos el intervalo
+  };
+  
+  reset() {
+    this.timerS.minBT = 0;
+    this.timerS.sBT = 5;
+    this.loadBTime();
+  }
+  public async publish($event) {
+    if ($event.detail.checked) {
+      this.isPublic = true;
+    } else {
+      this.isPublic = false;
+    }
+  }
   public exit() {
     this.modalController.dismiss();
   }

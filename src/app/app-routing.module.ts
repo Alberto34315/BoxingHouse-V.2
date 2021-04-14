@@ -41,6 +41,26 @@ const routes: Routes = [
   {
     path: 'start-training',
     loadChildren: () => import('./pages/start-training/start-training.module').then( m => m.StartTrainingPageModule)
+  },
+  {
+    path: 'tab4',
+    loadChildren: () => import('./tab4/tab4.module').then( m => m.Tab4PageModule)
+  },
+  {
+    path: 'add-friends',
+    loadChildren: () => import('./pages/add-friends/add-friends.module').then( m => m.AddFriendsPageModule)
+  },
+  {
+    path: 'listfriends',
+    loadChildren: () => import('./pages/listfriends/listfriends.module').then( m => m.ListfriendsPageModule)
+  },
+  {
+    path: 'historical',
+    loadChildren: () => import('./pages/historical/historical.module').then( m => m.HistoricalPageModule)
+  },
+  {
+    path: 'graph',
+    loadChildren: () => import('./pages/graph/graph.module').then( m => m.GraphPageModule)
   }
 
 ];

@@ -5,8 +5,8 @@ import { training } from 'src/app/model/training';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { PresentService } from 'src/app/services/present.service';
+import { TtsService } from 'src/app/services/tts.service';
 import { AddExercisePage } from '../add-exercise/add-exercise.page';
-
 @Component({
   selector: 'app-list-exercise',
   templateUrl: './list-exercise.page.html',
@@ -14,7 +14,7 @@ import { AddExercisePage } from '../add-exercise/add-exercise.page';
 })
 export class ListExercisePage implements OnInit {
   @ViewChild('input', { static: false }) myInput: IonSearchbar;
-  exercises: exercise[]
+  exercises: exercise[];
   constructor(private api: ApiService,
     private modalController: ModalController,
     private authS: AuthService,

@@ -7,9 +7,13 @@
 </ion-header>
 
 <ion-content>
-  
+
   <p class="round">{{this.countRound}}/{{this.round}}</p>
   <ion-row class="ion-justify-content-center">
+    <ion-item *ngIf="this.flag; else elseBlock">
+      <img src="../../../assets/imgs/muscle.svg" width="70" height="70">
+    </ion-item>
+    <ng-template #elseBlock><img src="../../../assets/imgs/moon.svg" width="70" height="70"></ng-template>
     <svg id="progress-circle" width="50vh" height="50vh" viewBox="0 0 200 200">
       <linearGradient id="linearColors1" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%" stop-color="#ddd6f3"></stop>
@@ -31,10 +35,9 @@
     <ion-button *ngIf="state==='resume'" expand="block" shape="round" (click)="this.stopTimer()" color="danger">
       STOP
     </ion-button>
- <ion-button *ngIf="state==='stop'" expand="block" shape="round" (click)="this.resume()"
-    color="success">
-    RESUME
-  </ion-button>
+    <ion-button *ngIf="state==='stop'" expand="block" shape="round" (click)="this.resume()" color="success">
+      RESUME
+    </ion-button>
   </ion-footer>
 
 </ion-content>

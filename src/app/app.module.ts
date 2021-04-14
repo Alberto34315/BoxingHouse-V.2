@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { Injectable, NgModule } from '@angular/core';
+import { BrowserModule, HAMMER_GESTURE_CONFIG,HammerGestureConfig, HammerModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -32,20 +32,40 @@ import { ListExercisePage } from './pages/list-exercise/list-exercise.page';
 import { SelectExercisePage } from './pages/select-exercise/select-exercise.page';
 import { ExecuteTrainingPage } from './pages/execute-training/execute-training.page';
 import { StartTrainingPage } from './pages/start-training/start-training.page';
-
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
+import { AddFriendsPage } from './pages/add-friends/add-friends.page';
+import { ListfriendsPage } from './pages/listfriends/listfriends.page';
+import * as Hammer from 'hammerjs';
+import { GraphPage } from './pages/graph/graph.page';
+import { HistoricalPage } from './pages/historical/historical.page';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+
+@Injectable()
+export class MyHammerConfig extends HammerGestureConfig  {
+  overrides = <any>{
+     // override hammerjs default configuration
+     'pan': {
+       direction: Hammer.DIRECTION_ALL
+      }
+ }
+}
 @NgModule({
-  declarations: [AppComponent,ChronometerPage, AddtrainingPage,AddExercisePage,ListExercisePage,SelectExercisePage,ExecuteTrainingPage,StartTrainingPage/*,LoginPage,SignupPage*/],
-  entryComponents: [ChronometerPage,AddtrainingPage,AddExercisePage,ListExercisePage,SelectExercisePage,ExecuteTrainingPage,StartTrainingPage/*,LoginPage,SignupPage*/],
+  declarations: [AppComponent,ChronometerPage, 
+    AddtrainingPage,AddExercisePage,ListExercisePage,SelectExercisePage,
+    ExecuteTrainingPage,StartTrainingPage,AddFriendsPage,ListfriendsPage,GraphPage,HistoricalPage/*,LoginPage,SignupPage*/],
+  entryComponents: [ChronometerPage,AddtrainingPage,
+    AddExercisePage,ListExercisePage,SelectExercisePage,ExecuteTrainingPage,
+    StartTrainingPage,AddFriendsPage,ListfriendsPage,GraphPage,HistoricalPage/*,LoginPage,SignupPage*/],
   imports: [BrowserModule, 
     CountdownModule,
     IonicModule.forRoot(),
      AppRoutingModule,
      ReactiveFormsModule,
      HttpClientModule,
+     HammerModule,
      TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -66,7 +86,9 @@ export function createTranslateLoader(http: HttpClient) {
     GalleryService,
     AuthService,
     TimerService,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    TextToSpeech,
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {provide: HAMMER_GESTURE_CONFIG, useClass:MyHammerConfig }
   ],
   bootstrap: [AppComponent]
 })

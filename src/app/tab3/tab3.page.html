@@ -18,6 +18,14 @@
       <p>{{this.user.email}}</p>
     </ion-label>
   </ion-item>
+  <ion-item (click)="this.openHistorical()" style="border-bottom: 1px #808388 solid;">
+    <ion-icon slot="end" name="file-tray-full-sharp"></ion-icon>
+    <ion-label>{{'TAB3.historical' | translate}}</ion-label>
+  </ion-item>
+  <ion-item (click)="this.openGraph()" style="border-bottom: 1px #808388 solid;">
+    <ion-icon slot="end" name="bar-chart-sharp"></ion-icon>
+    <ion-label>{{'TAB3.graph' | translate}}</ion-label>
+  </ion-item>
 <ion-button class="bottom" shape="round" expand="full"  (click)="this.logout()" >{{'TAB3.logout' | translate}}<ion-icon name="exit-sharp"></ion-icon>
 </ion-button>
 </ion-content>

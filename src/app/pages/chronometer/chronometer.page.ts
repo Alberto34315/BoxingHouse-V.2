@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Time } from 'src/app/model/time';
 import { Timer } from 'src/app/model/timer';
 import { training } from 'src/app/model/training';
+import { TtsService } from 'src/app/services/tts.service';
 const circleR = 80;
 const circleDasharray = 2 * Math.PI * circleR;
 
@@ -20,8 +21,8 @@ export class ChronometerPage implements OnInit {
   t: number; //in seconds
   bt: number;
   round;
-  tround:Time;
-  btround:Time;
+  tround: Time;
+  btround: Time;
   text;
   totalTime;
   totalBTime;
@@ -32,42 +33,47 @@ export class ChronometerPage implements OnInit {
   circleR = circleR;
   circleDasharray = circleDasharray;
   countRound = 1;
+  public textSpeak;
+  flag:boolean;
   state: 'stop' | 'resume' | 'finish' = 'finish';
-  constructor(private modalController: ModalController) { }
+  constructor(private modalController: ModalController,
+    private speak: TtsService) { }
 
   ngOnInit() {
-    
+    this.flag=true;
     if (this.timer == undefined) {
       this.round = 1;
       if (this.trainingStart != undefined) {
         if (this.trainingStart.time < 60) {
-            this.tround={
-              min:0,
-              s:0
-            }
-          this.btround={
-            min:0,
-            s:this.trainingStart.time
-          } 
-        } else {
-          this.tround={
-            min:0,
-            s:0
+          this.tround = {
+            min: 0,
+            s: 0
           }
-          this.btround ={
-            min:parseInt((this.trainingStart.time / 60).toFixed()),
-            s:(this.trainingStart.time % 60)
-          } 
+          this.btround = {
+            min: 0,
+            s: this.trainingStart.time
+          }
+        } else {
+          this.tround = {
+            min: 0,
+            s: 0
+          }
+          this.btround = {
+            min: parseInt((this.trainingStart.time / 60).toFixed()),
+            s: (this.trainingStart.time % 60)
+          }
         }
       }
-    }else{
+    } else {
       this.round = this.timer.round;
-      this.tround=this.timer.tRounds;
-      this.btround=this.timer.bTime;
+      this.tround = this.timer.tRounds;
+      this.btround = this.timer.bTime;
     }
   }
   startTime(duration: number) {
+    this.flag=true;
     this.state = 'resume';
+    this.read("Comenzamos")
     if (this.countRound <= this.round) {
       clearInterval(this.interval);
       this.t = duration * ((this.tround.min * 60) + this.tround.s);
@@ -79,7 +85,6 @@ export class ChronometerPage implements OnInit {
 
     } else {
       this.stopTimer();
-
       //  this.modalController.dismiss();
     }
 
@@ -99,6 +104,9 @@ export class ChronometerPage implements OnInit {
     const percentage = ((this.totalTime - this.t) / this.totalTime) * 100;
     this.percent.next(percentage);
     --this.t;
+    if (this.t==-1) {
+      this.read("Descanso")
+    }
     if (this.t < -1) {
       this.breakTime();
     }
@@ -131,6 +139,7 @@ export class ChronometerPage implements OnInit {
   }
 
   breakTime() {
+    this.flag=false;
     let m: any = this.bt / 60;
     let s: any = this.bt % 60;
 
@@ -148,7 +157,10 @@ export class ChronometerPage implements OnInit {
       this.startTime(this.startDuration);
     }
   }
-
+  read(item?: any) {
+    this.text = item
+    this.speak.talk(this.text);
+  }
   public exit() {
     this.modalController.dismiss();
   }

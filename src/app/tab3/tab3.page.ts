@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { user } from '../model/user';
+import { GraphPage } from '../pages/graph/graph.page';
+import { HistoricalPage } from '../pages/historical/historical.page';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { GalleryService } from '../services/gallery.service';
@@ -24,13 +27,35 @@ export class Tab3Page implements OnInit {
     private authS: AuthService,
     private galleryS: GalleryService,
     private present: PresentService,
-    private api: ApiService) { }
+    private api: ApiService,
+    private modalController: ModalController) { }
 
   ngOnInit() {
     this.loadUser();
+    console.log(this.user)
   }
-  
-  
+  async openHistorical(): Promise<any> {
+    const modal = await this.modalController.create({
+      component: HistoricalPage,
+      cssClass: 'my-custom-class',
+      componentProps: {
+      }
+    });
+    await modal.present();
+    return await modal.onWillDismiss();
+  }
+
+  async openGraph(): Promise<any> {
+    const modal = await this.modalController.create({
+      component: GraphPage,
+      cssClass: 'my-custom-class',
+      componentProps: {
+      }
+    });
+    await modal.present();
+    return await modal.onWillDismiss();
+  }
+
   loadUser(){
     this.user = {
       id: this.authS.getUser().id,
@@ -38,7 +63,10 @@ export class Tab3Page implements OnInit {
       avatar: this.authS.getUser().avatar,
       pass: this.authS.getUser().pass,
       email: this.authS.getUser().email,
-      trainings:this.authS.getUser().trainings
+      lt:this.authS.getUser().lt,
+      le:this.authS.getUser().le,
+      lrecords:this.authS.getUser().lrecords,
+      friends:this.authS.getUser().friends
     }
   }
   public async setAvatar() {
@@ -54,7 +82,10 @@ export class Tab3Page implements OnInit {
           avatar: this.galleryS.myphoto,
           pass: this.authS.getUser().pass,
           email: this.authS.getUser().email,
-          trainings:this.authS.getUser().trainings
+          lt:this.authS.getUser().lt,
+          le:this.authS.getUser().le,
+          lrecords:this.authS.getUser().lrecords,
+          friends:this.authS.getUser().friends
         }
         this.api.updateUser(this.user).then((respuesta) => {
         }).catch((err) => {

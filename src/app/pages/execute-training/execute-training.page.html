@@ -2,27 +2,43 @@
   <ion-toolbar>
     <ion-button shape="round" (click)="this.exit()" color="success">
       <ion-icon name="arrow-undo-outline"></ion-icon>
-    </ion-button>                                           
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
- 
-    <ion-item ><h2 class="center">{{this.trainingExe.title}}</h2></ion-item>
-    <ion-item ><h5 class="center">{{'TAB2.breakT' | translate}}: {{this.timerS.minBT}}:{{this.timerS.sBT}}</h5></ion-item>
-  <ion-slides >
+
+  <ion-item>
+    <h2 class="center">{{this.trainingExe.title}}</h2>
+  </ion-item>
+  <ion-item>
+    <h5 class="center">{{'TAB2.breakT' | translate}}: {{bTime|async}}
+      <!--{{this.timerS.minBT}}:{{this.timerS.sBT}}-->
+    </h5>
+  </ion-item>
+  <ion-slides #sliderRef pager="true">
     <ion-slide *ngFor="let item of this.trainingExe.exercises">
-      <div >
-        <img class="exePhoto" [src]="item.photo"/>
+      <div>
+        <img class="exePhoto" [src]="item.photo" />
         <h2>{{item.nameExercise}}</h2>
         <p>{{item.description}}</p>
-        <ion-item >
+        <ion-item class="space-bottom">
           <p style="margin-left: auto;"><b>{{item.type}}:</b></p>
-          <p style="margin-right: auto;margin-left: 20px;">{{item.repTime}}</p>
+          <p *ngIf="loadTimeExercise(item); else elseBlock" style="margin-right: auto;margin-left: 20px;">
+            {{timeExer|async}}
+          </p>
+          <ng-template #elseBlock>
+            <p style="margin-right: auto;margin-left: 20px;">
+              {{item.repTime}}
+            </p>
+          </ng-template>
+          <!--<p style="margin-right: auto;margin-left: 20px;">{{item.repTime}}</p>-->
         </ion-item>
       </div>
     </ion-slide>
-   
+
   </ion-slides>
-  <ion-button [disabled]="this.button" (click)="this.openStartTraining()" class="bottom" expand="block" shape="round">{{'CHRONOMETER.start' | translate}}</ion-button>
+  <ion-button [disabled]="this.button" (click)="this.openStartTraining()" class="bottom btn-flotante" expand="block"
+    shape="round">{{'CHRONOMETER.start' | translate}}</ion-button>
+  <!-- <a href="#" class="btn-flotante">Llamada a la acción</a>-->
 </ion-content>

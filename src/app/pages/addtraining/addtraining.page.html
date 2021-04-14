@@ -9,26 +9,32 @@
 <ion-content>
 
   <form id="form" [formGroup]="task" (ngSubmit)="this.save()">
+    <ion-item>
+      <ion-label>{{'TRAINING.publish' | translate}}</ion-label>
+      <ion-toggle formControlName="publish" [(ngModel)]="this.isPublic" (ionChange)="publish($event)"></ion-toggle>
+    </ion-item>
     <ion-item lines="full">
       <ion-label position="floating">{{'TRAINING.title' | translate}}</ion-label>
-      <ion-input type="text" formControlName="title" ></ion-input>
+      <ion-input type="text" formControlName="title"></ion-input>
     </ion-item>
     <ion-list>
       <ion-item *ngFor="let entry of  this.training.exercises">
         <ion-label>
-       
+
           <ion-item>
-            <ion-button (click)="this.removeExercise(entry)"  color="light"><ion-icon name="close-outline"></ion-icon></ion-button>
-          <ion-item>
-            <ion-thumbnail slot="start">
-              <ion-img [src]="entry.photo"></ion-img>
-            </ion-thumbnail>
-            <div>
-              <h1>{{entry.nameExercise}}</h1>
-              {{entry.description}}
-            </div>
+            <ion-button (click)="this.removeExercise(entry)" color="light">
+              <ion-icon name="close-outline"></ion-icon>
+            </ion-button>
+            <ion-item>
+              <ion-thumbnail slot="start">
+                <ion-img [src]="entry.photo"></ion-img>
+              </ion-thumbnail>
+              <div>
+                <h1>{{entry.nameExercise}}</h1>
+                {{entry.description}}
+              </div>
+            </ion-item>
           </ion-item>
-        </ion-item>
         </ion-label>
       </ion-item>
     </ion-list>
@@ -39,11 +45,13 @@
     </div>
     <ion-item class="tab2 ">
       <ion-label>{{'TAB2.breakT' | translate}}:
-        <ion-button (click)="this.removeBTime()" class="addRemove" slot="start" shape="round">
+        <ion-button (press)="this.removeBTimePress()" (click)="this.removeBTime()" (pressup)="this.clearPress()"
+          (pan)="this.clearPress()" class="addRemove" slot="start" shape="round">
           <ion-icon name="remove-circle-outline"></ion-icon>
         </ion-button>
-        {{this.timerS.minBT}}:{{this.timerS.sBT}}
-        <ion-button (click)="this.addBTime()" class="addRemove" slot="start" shape="round">
+        {{bTime|async}}
+        <ion-button (press)="this.addBTimePress()" (click)="this.addBTime()" (pressup)="this.clearPress()"
+          (pan)="this.clearPress()" class="addRemove" slot="start" shape="round">
           <ion-icon name="add-circle-outline"></ion-icon>
         </ion-button>
       </ion-label>

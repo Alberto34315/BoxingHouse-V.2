@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonSearchbar, ModalController } from '@ionic/angular';
+import { BehaviorSubject } from 'rxjs';
+import { records } from '../model/records';
 import { training } from '../model/training';
 import { AddExercisePage } from '../pages/add-exercise/add-exercise.page';
 import { AddtrainingPage } from '../pages/addtraining/addtraining.page';
@@ -16,6 +18,14 @@ import { PresentService } from '../services/present.service';
 })
 export class Tab1Page {
   trainings: training[]
+  text;
+  m;
+  s;
+  mbt;
+  sbt;
+  timeout;
+  interval;
+  bTime: BehaviorSubject<string> = new BehaviorSubject("00:00");
   @ViewChild('input', { static: false }) myInput: IonSearchbar;
   constructor(private api: ApiService,
     private authS: AuthService,
@@ -133,7 +143,6 @@ export class Tab1Page {
         this.api.deleteFromListExercise(item, element).then(d => { }).catch(err => { });
       });
     }
-
     setTimeout(() => {
       this.api.removeTraining(item).then(async d => await this.loadAll())
         .catch(async err => {
@@ -142,5 +151,20 @@ export class Tab1Page {
     }, 500);
   }
 
+  loadBTime(item?:training):boolean {
+    let flag:boolean=true;
+    if (item.time < 60) {
+      this.m = 0;
+      this.s = item.time
+    } else {
+      this.m = parseInt((item.time / 60).toFixed());
+      this.s = (item.time % 60)
+    }
+    this.mbt = String('0' + Math.floor(this.m)).slice(-2);
+    this.sbt = String('0' + Math.floor(this.s)).slice(-2);
+    this.text = this.mbt + ':' + this.sbt;
+    this.bTime.next(this.text);
+    return flag
+  }
 
 }

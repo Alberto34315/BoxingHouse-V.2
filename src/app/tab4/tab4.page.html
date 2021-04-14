@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <ion-icon name="people"></ion-icon>
+      <ion-label>{{'TAB4.publications' | translate}}</ion-label>
+    </ion-title>
+    <app-popover slot="end"></app-popover>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar #input showCancelButton="focus" debounce="500" (ionChange)="searchTrainingsFriends($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="this.loadAll($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-item *ngFor="let item of trainings">
+    <ion-card (click)="this.openExecuteTrainingBtn(item)">
+      <ion-card-header>
+       <ion-card-subtitle *ngIf="item.creator!=undefined">{{item.creator.name}}</ion-card-subtitle>
+        <ion-card-title>{{item.title}}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ion-slides >
+          <ion-slide style="height: auto; width: 100%;" *ngFor="let i of item.exercises">
+            <div>
+              <img class="exePhoto" [src]="i.photo" />
+              <h2>{{i.nameExercise}}</h2>
+              <p>{{i.description}}</p>
+            </div>
+          </ion-slide>
+        </ion-slides>
+      </ion-card-content>
+    </ion-card>
+  </ion-item>
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="this.openAddFriendBtn()">
+        <ion-icon name="person-add-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+    <ion-fab-list side="start">
+      <ion-fab-button (click)="this.openListFriendsBtn()">
+        <ion-icon name="people-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>

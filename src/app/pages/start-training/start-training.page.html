@@ -3,6 +3,9 @@
     <ion-button shape="round" (click)="this.exit()" color="success">
       <ion-icon name="arrow-undo-outline"></ion-icon>
     </ion-button>
+    <ion-button (click)="this.read(this.trainingStart.exercises[this.i])" fill="outline" color="medium">
+      <ion-icon name="mic-circle-outline" class="butt"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -18,8 +21,11 @@
   </ion-item>
   <ion-item>
     <p style="margin-left: auto; font-size: 25px;"><b>{{this.trainingStart.exercises[this.i].type}}:</b></p>
-    <p style="margin-right: auto;margin-left: 20px; font-size: 25px;">{{this.t}}
-    </p>
+  <!--  <p style="margin-right: auto;margin-left: 20px; font-size: 25px;">{{this.t}}
+    </p>-->
+    <div style="margin-right: auto;margin-left: 20px; font-size: 25px;" *ngIf="loadTimeExercise(this.trainingStart.exercises[this.i]); else elseBlock">{{timeExer|async}}</div>
+    <ng-template #elseBlock><div style="margin-right: auto;margin-left: 20px; font-size: 25px;"> {{this.num}}</div></ng-template>
+
   </ion-item>
   <ion-item *ngIf="this.trainingStart.exercises[this.i].type=='Time'">
     <ion-button *ngIf="state==='stop'" (click)="this.playTime()" class="center" style="height: 50px; width: 50px; font-size: 20px;">
@@ -40,4 +46,6 @@
       <ion-icon name="arrow-forward-circle-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+  <ion-button *ngIf="this.countRound == this.trainingStart.exercises.length" (click)="this.finishTraining()" class="bottom btn-flotante btnwidth"  expand="block"
+    shape="round">{{'TRAINING.finalize' | translate}}</ion-button>
 </ion-content>

@@ -1,4 +1,5 @@
 import { exercise } from "./exercise";
+import { records } from "./records";
 import { training } from "./training";
 
 export interface user{
@@ -7,6 +8,9 @@ export interface user{
     email?:String,
     pass?:String,
     avatar?:String,
-    trainings?:training[],
-    exercises?:exercise[]
+    lt?:training[],
+    le?:exercise[],
+    friends?:user[],
+    lrecords?:records[],
+    isChecked?:boolean
 }
