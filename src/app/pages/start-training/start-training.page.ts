@@ -100,18 +100,18 @@ export class StartTrainingPage implements OnInit {
     this.modalController.dismiss();
   }
 
-  //Mirar en la api el Creator
+  
   finishTraining() {
     let d = new Date();
     this.record= {
       idTrai: {id:this.trainingStart.id},
       idu:{id:this.authS.getUser().id},
-      date: d
+      localDateTime: d
     }
     this.api.createRecord(this.record).then(result => {
       this.exit();
     }).catch(err => {
-    //  console.log(err.error)
+      console.log(err.error)
     });
   }
   

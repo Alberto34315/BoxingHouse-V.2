@@ -32,7 +32,6 @@ export class Tab3Page implements OnInit {
 
   ngOnInit() {
     this.loadUser();
-    console.log(this.user)
   }
   async openHistorical(): Promise<any> {
     const modal = await this.modalController.create({

@@ -106,7 +106,7 @@ export class ApiService {
    * Devuelve una promesa con todos los entrenamientos realizados de la base de datos por id del usuario
    * @param id recibe un number
    */
-  public getRecordsByUser(id?: number): Promise<training[] | null> {
+  public getRecordsByUser(id?: number): Promise<|records[] | null> {
     return new Promise((resolve, reject) => {
       let endpoint = environment.endpoint + environment.apiRecord + "user/" + id;
       this.http
@@ -121,6 +121,27 @@ export class ApiService {
         .catch(err => reject(err));
     });
   }
+
+
+/**
+   * Devuelve una promesa con el numero de entrenamientos realizados en una fecha
+   * @param id recibe un string
+   */
+ public getNumberOfTrainingsForDate(id?: string): Promise<number | null> {
+  return new Promise((resolve, reject) => {
+    let endpoint = environment.endpoint + environment.apiRecord + "date/" + id+"%20%25";
+    this.http
+      .get(endpoint, {}, this.header)
+      .then(d => {
+        if (d) {
+          resolve(JSON.parse(d.data));
+        } else {
+          resolve(null);
+        }
+      })
+      .catch(err => reject(err));
+  });
+}
 
   /**
    * Devuelve una promesa con todos los entrenamientos de la base de datos por id del usuario y si son publicos
@@ -478,11 +499,6 @@ export class ApiService {
         this.http
           .post(endpoint, item, this.header)
           .then(d => {
-            console.log('url '+d.url)
-            console.log('headers '+JSON.stringify(d.headers))
-            console.log('status '+d.status)
-            console.log('data '+d.data)
-            console.log(d)
             resolve(d.data);
           })
           .catch(err => {
@@ -508,10 +524,6 @@ export class ApiService {
         this.http
           .post(endpoint, item, this.header)
           .then(d => {
-            console.log('url '+d.url)
-            console.log('headers '+JSON.stringify(d.headers))
-            console.log('status '+d.status)
-            console.log('data '+d.data)
             resolve(d.data);
           })
           .catch(err => reject(err));

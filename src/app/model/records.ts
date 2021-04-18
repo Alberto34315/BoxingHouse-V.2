@@ -3,6 +3,6 @@ import { user } from "./user";
 export interface records{
     id?:number,
     idTrai?:training,
-    date?:Date,
+    localDateTime?:Date,
     idu?:user
 }

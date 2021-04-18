@@ -12,9 +12,9 @@ import { PresentService } from 'src/app/services/present.service';
   styleUrls: ['./historical.page.scss'],
 })
 export class HistoricalPage implements OnInit {
-
+  date: Date;
   trainings: training[];
-  records:records[];
+  records: records[];
   constructor(private modalController: ModalController,
     private api: ApiService,
     private authS: AuthService,
@@ -24,7 +24,6 @@ export class HistoricalPage implements OnInit {
   }
   async ionViewDidEnter() {
     await this.loadAll();
-    console.log(this.records)
   }
   public async loadAll($event = null) {
     // await this.present.presentLoading;
@@ -42,5 +41,12 @@ export class HistoricalPage implements OnInit {
   }
   public exit() {
     this.modalController.dismiss();
+  }
+
+  format(i?: Date): boolean {
+    let result = true;
+    this.date = new Date(i);
+   // this.date=new Date(this.date.toUTCString()+" GMT-0200")
+    return result;
   }
 }

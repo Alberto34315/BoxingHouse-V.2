@@ -38,7 +38,7 @@ import { ListfriendsPage } from './pages/listfriends/listfriends.page';
 import * as Hammer from 'hammerjs';
 import { GraphPage } from './pages/graph/graph.page';
 import { HistoricalPage } from './pages/historical/historical.page';
-
+import { DatePipe } from '@angular/common';
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -75,6 +75,7 @@ export class MyHammerConfig extends HammerGestureConfig  {
     })],
   providers: [
     StatusBar,
+    DatePipe,
     ApiService,
     HTTP,
     SplashScreen,
