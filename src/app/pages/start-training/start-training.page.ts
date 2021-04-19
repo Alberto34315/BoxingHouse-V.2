@@ -96,7 +96,9 @@ export class StartTrainingPage implements OnInit {
     clearInterval(this.interval);
     this.trainingStart.exercises[this.i].repTime=this.t
   }
+
   public exit() {
+    this.stopTime();
     this.modalController.dismiss();
   }
 

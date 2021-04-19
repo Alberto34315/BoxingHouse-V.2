@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonSearchbar, ModalController } from '@ionic/angular';
+import { AlertController, IonSearchbar, ModalController } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
 import { records } from '../model/records';
 import { training } from '../model/training';
@@ -30,6 +30,7 @@ export class Tab1Page {
   constructor(private api: ApiService,
     private authS: AuthService,
     private modalController: ModalController,
+    private alertController: AlertController,
     private present: PresentService) { }
 
   async ionViewDidEnter() {
@@ -136,6 +137,33 @@ export class Tab1Page {
       await this.loadAll();
     }
   }
+
+  async removetAlert(item: training) {
+    const alert = await this.alertController.create({
+      header: '¿Estás seguro de querer borrar el entrenamiento?',
+      message: 'El entrenamiento se borrará del historial de todos los usuarios que hayan realizado este entrenamiento',
+      buttons: [{
+        text: 'No',
+        role: 'cancel',
+        handler: () => {
+          // Ha respondido que no así que no hacemos nada
+        }
+      },
+      {
+        text: 'Si',
+        handler: () => {
+          // AquÍ borramos el sitio en la base de datos
+          this.removeTraining(item);
+          alert.dismiss()
+        }
+      }]
+
+
+    });
+    await alert.present();
+  }
+
+
   public async removeTraining(item: training) {
     await this.present.presentLoading;
     if (item.exercises != undefined) {
@@ -144,6 +172,10 @@ export class Tab1Page {
       });
     }
     setTimeout(() => {
+      this.api.removeTrainingFromRecord(item).then(async d =>{})
+        .catch(async err => {
+          console.log(err)
+        })
       this.api.removeTraining(item).then(async d => await this.loadAll())
         .catch(async err => {
           console.log(err)

@@ -29,7 +29,7 @@
       <ion-checkbox (click)="u.isChecked=$event.currentTarget.checked" formControlName="check" slot="end"></ion-checkbox>
     </ion-item>
   </ion-list>
-  <ion-button class="bottom" type="submit" expand="block" shape="round">{{'EXERCISE.save' | translate}}
+  <ion-button [disabled]="this.flag"  class="bottom" type="submit" expand="block" shape="round">{{'EXERCISE.save' | translate}}
   </ion-button>
 </form>
 </ion-content>

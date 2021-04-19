@@ -46,7 +46,25 @@ export class HistoricalPage implements OnInit {
   format(i?: Date): boolean {
     let result = true;
     this.date = new Date(i);
-   // this.date=new Date(this.date.toUTCString()+" GMT-0200")
     return result;
+  }
+
+  public async searchRecords($event) {
+    let value = $event.detail.value;
+    value = value.trim();
+    if (value !== '') {
+      //await this.ui.showLoading();
+      this.api.searchRecords(this.authS.getUser().id,value)
+        .then(d => {
+          this.records = d;
+        })
+        .catch(async err => await this.present.presentToast(err.error, "danger"))
+        .finally(async () => {
+          // await this.ui.hideLoading();
+          // this.myInput.setFocus();
+        });
+    } else {
+      await this.loadAll();
+    }
   }
 }

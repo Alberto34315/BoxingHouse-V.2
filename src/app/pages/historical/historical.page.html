@@ -4,6 +4,9 @@
       <ion-icon name="arrow-undo-outline"></ion-icon>
     </ion-button>
   </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar #input showCancelButton="focus" debounce="500" (ionChange)="searchRecords($event)"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>

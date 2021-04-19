@@ -14,17 +14,20 @@ import { PresentService } from 'src/app/services/present.service';
 export class AddFriendsPage implements OnInit {
   users: user[]
   user: user
+  flag: boolean = true;
   public task: FormGroup;
   constructor(private modalController: ModalController,
     private api: ApiService,
     private formBuilder: FormBuilder,
     private authS: AuthService,
-    private present: PresentService) { 
-       this.task = this.formBuilder.group({
+    private present: PresentService) {
+    this.task = this.formBuilder.group({
       check: false
-    })}
+    })
+  }
 
   ngOnInit() {
+    this.users = []
     this.api.getAllFriends(this.authS.getUser().id).then(result => {
       this.authS.getUser().friends = result
     }).catch(err => {
@@ -38,6 +41,11 @@ export class AddFriendsPage implements OnInit {
     // await this.present.presentLoading;
     try {
       this.users = await this.api.getAllUserLessOwner(this.authS.getUser().id);
+      if (this.users.length == 0) {
+        this.flag = true;
+      } else {
+        this.flag = false
+      }
       if ($event) {
         $event.target.complete();
       }
@@ -54,7 +62,7 @@ export class AddFriendsPage implements OnInit {
       if (element.isChecked == false) {
         this.user = element
         this.authS.getUser().friends.push(this.user)
-        this.api.updateUser(this.authS.getUser()).then(result=>{}).catch(err=>{console.log(err.error)});
+        this.api.updateUser(this.authS.getUser()).then(result => { }).catch(err => { console.log(err.error) });
       }
     });
     this.modalController.dismiss();

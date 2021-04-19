@@ -106,7 +106,7 @@ export class ApiService {
    * Devuelve una promesa con todos los entrenamientos realizados de la base de datos por id del usuario
    * @param id recibe un number
    */
-  public getRecordsByUser(id?: number): Promise<|records[] | null> {
+  public getRecordsByUser(id?: number): Promise<| records[] | null> {
     return new Promise((resolve, reject) => {
       let endpoint = environment.endpoint + environment.apiRecord + "user/" + id;
       this.http
@@ -122,26 +122,45 @@ export class ApiService {
     });
   }
 
-
-/**
-   * Devuelve una promesa con el numero de entrenamientos realizados en una fecha
-   * @param id recibe un string
+  /**
+   * Devuelve una promesa con los 7 ultimos entrenamientos realizados por el usuario
+   * @param id recibe un number
    */
- public getNumberOfTrainingsForDate(id?: string): Promise<number | null> {
-  return new Promise((resolve, reject) => {
-    let endpoint = environment.endpoint + environment.apiRecord + "date/" + id+"%20%25";
-    this.http
-      .get(endpoint, {}, this.header)
-      .then(d => {
-        if (d) {
-          resolve(JSON.parse(d.data));
-        } else {
-          resolve(null);
-        }
-      })
-      .catch(err => reject(err));
-  });
-}
+  public getLastSevenRecordsByIdUser(id?: number): Promise<| records[] | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiRecord + "lastTrainings/" + id;
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if (d) {
+            resolve(JSON.parse(d.data));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+     * Devuelve una promesa con el numero de entrenamientos realizados en una fecha
+     * @param id recibe un string
+     */
+  public getNumberOfTrainingsForDate(date?: string,id?:number): Promise<number | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiRecord + "date/" + date + "%20%25/"+environment.apiUser+id;
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if (d) {
+            resolve(JSON.parse(d.data));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
 
   /**
    * Devuelve una promesa con todos los entrenamientos de la base de datos por id del usuario y si son publicos
@@ -228,6 +247,27 @@ export class ApiService {
   public searchFriends(id?: number, name?: string): Promise<user[] | null> {
     return new Promise((resolve, reject) => {
       let endpoint = environment.endpoint + environment.apiUser + "searchFriends/" + id + "/" + name;
+
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if (d) {
+            resolve(JSON.parse(d.data));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+   * Devuelve una promesa con todos los usuarios que son amigos de un usuario buscados por su nombre
+   * @param id recibe un number
+   */
+  public searchRecords(id?: number, name?: string): Promise<records[] | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiRecord + "searchRecord/" + id + "/" + name;
 
       this.http
         .get(endpoint, {}, this.header)
@@ -490,7 +530,7 @@ export class ApiService {
     * Crea un record
     * @param item recibe un record
     */
-   public createRecord(item: records): Promise<any> {
+  public createRecord(item: records): Promise<any> {
     const endpoint = environment.endpoint + environment.apiRecord;
     return new Promise((resolve, reject) => {
       if (item) {
@@ -502,7 +542,7 @@ export class ApiService {
             resolve(d.data);
           })
           .catch(err => {
-            console.log('Error '+err.error)
+            console.log('Error ' + err.error)
             reject(err)
           });
       } else {
@@ -579,7 +619,7 @@ export class ApiService {
      * Elimina el record pasado
      * @param item recibe un record
      */
-  public removeRecord(item: any): Promise<void> {
+  public eRecord(item: any): Promise<void> {
     const id: any = item.id ? item.id : item;
     const endpoint = environment.endpoint + environment.apiRecord + id;
     console.log(endpoint)
@@ -593,6 +633,23 @@ export class ApiService {
     });
   }
 
+  /**
+     * Elimina el record por el entrenamientos pasado
+     * @param item recibe un record
+     */
+  public removeTrainingFromRecord(item: any): Promise<void> {
+    const id: any = item.id ? item.id : item;
+    const endpoint = environment.endpoint + environment.apiRecord+"trainingId/" + id;
+    console.log(endpoint)
+    return new Promise((resolve, reject) => {
+      this.http
+        .delete(endpoint, {}, this.header)
+        .then(d => {
+          resolve();
+        })
+        .catch(err => reject(err));
+    });
+  }
   /**
    * Elimina la relacion entre el ejercicio y el entrenamiento
    * @param t training
