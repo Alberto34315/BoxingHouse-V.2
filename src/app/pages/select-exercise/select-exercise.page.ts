@@ -13,20 +13,20 @@ import { PresentService } from 'src/app/services/present.service';
   styleUrls: ['./select-exercise.page.scss'],
 })
 export class SelectExercisePage implements OnInit {
-  
+
   @Input("training") training: training;
-  exercises:exercise[];
-  exercise:exercise;
+  exercises: exercise[];
+  exercise: exercise;
   public task: FormGroup;
   constructor(private api: ApiService,
     private modalController: ModalController,
     private formBuilder: FormBuilder,
-    private authS:AuthService,
+    private authS: AuthService,
     private present: PresentService) {
-      this.task = this.formBuilder.group({
-        check: false
-      })
-     }
+    this.task = this.formBuilder.group({
+      check: false
+    })
+  }
 
   ngOnInit() {
   }
@@ -35,39 +35,62 @@ export class SelectExercisePage implements OnInit {
     await this.loadAll();
   }
   public async loadAll() {
-    // await this.present.presentLoading;
-    try {
-      this.exercises = await this.api.getExercisesByUser(this.authS.getUser().id);
-      //    this.present.dismissLoad();
-    } catch (err) {
-      this.exercises = null; //vista
-      //      this.present.dismissLoad();
-      await this.present.presentToast("Error al cargar los entrenamientos", "danger");
+    if (this.training.id == undefined) {
+      try {
+        this.exercises = await this.api.getExercisesByUser(this.authS.getUser().id);
+      } catch (err) {
+        this.exercises = null;
+        await this.present.presentToast("Error al cargar los entrenamientos", "danger");
+      }
+    } else {
+      try {
+        this.exercises = await this.api.getAllExercisesByIdUserAndNotFoundTraining(this.authS.getUser().id);
+      } catch (err) {
+        this.exercises = null;
+        await this.present.presentToast("Error al cargar los entrenamientos", "danger");
+      }
     }
   }
-  addValue(e): void {
-    var isChecked = e.currentTarget.checked;
-    console.log(e.currentTarget);//undefined
-    console.log(isChecked)
-  }
-  
+
   public save() {
     this.exercises.forEach(element => {
-      if(element.isChecked==false){
-        
-        this.exercise={
-          id:element.id,
-          nameExercise:element.nameExercise,
-          description:element.description,
-          creator:element.creator,
-          type:element.type,
-          repTime:element.repTime,
-          photo:element.photo
+      if (element.isChecked == false) {
+
+        this.exercise = {
+          id: element.id,
+          nameExercise: element.nameExercise,
+          description: element.description,
+          creator: element.creator,
+          type: element.type,
+          repTime: element.repTime,
+          photo: element.photo
         }
         this.training.exercises.push(this.exercise)
       }
     });
     this.modalController.dismiss();
+  }
+
+  public async searchExercise($event) {
+    let value = $event.detail.value;
+    value = value.trim();
+    if (value !== '') {
+      if (this.training.id == undefined) {
+        this.api.searchExerciseByTitle(value, this.authS.getUser().id)
+          .then(d => {
+            this.exercises = d;
+          }).catch(async err => await this.present.presentToast(err.error, "danger"))
+          .finally(async () => { });
+      } else {
+        this.api.searchAllExercisesByIdUserAndNotFoundTraining(this.authS.getUser().id, value)
+          .then(d => {
+            this.exercises = d;
+          }).catch(async err => await this.present.presentToast(err.error, "danger"))
+          .finally(async () => { });
+      }
+    } else {
+      await this.loadAll();
+    }
   }
 
   public exit() {

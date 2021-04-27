@@ -7,7 +7,8 @@
     <app-popover slot="end"></app-popover>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-searchbar #input showCancelButton="focus" debounce="500" (ionChange)="searchTrainingsFriends($event)"></ion-searchbar>
+    <ion-searchbar #input showCancelButton="focus" debounce="500" (ionChange)="searchTrainingsFriends($event)">
+    </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -16,15 +17,24 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-item *ngFor="let item of trainings">
-    <ion-card (click)="this.openExecuteTrainingBtn(item)">
+    <ion-card style="border: 1px solid #40444b;" (click)="this.openExecuteTrainingBtn(item)">
       <ion-card-header>
-       <ion-card-subtitle *ngIf="item.creator!=undefined">{{item.creator.name}}</ion-card-subtitle>
+        <ion-card-subtitle *ngIf="item.creator!=undefined">
+          <ion-chip outline color="dark">
+            <ion-avatar>
+              <img [src]="item.creator.avatar">
+            </ion-avatar>
+            <ion-label>
+              {{item.creator.name}}
+            </ion-label>
+          </ion-chip>
+        </ion-card-subtitle>
         <ion-card-title>{{item.title}}</ion-card-title>
       </ion-card-header>
 
       <ion-card-content>
 
-        <ion-slides >
+        <ion-slides>
           <ion-slide style="height: auto; width: 100%;" *ngFor="let i of item.exercises">
             <div>
               <img class="exePhoto" [src]="i.photo" />

@@ -14,6 +14,7 @@ import { PresentService } from 'src/app/services/present.service';
 export class AddFriendsPage implements OnInit {
   users: user[]
   user: user
+  owner: user
   flag: boolean = true;
   public task: FormGroup;
   constructor(private modalController: ModalController,
@@ -28,11 +29,15 @@ export class AddFriendsPage implements OnInit {
 
   ngOnInit() {
     this.users = []
-    this.api.getAllFriends(this.authS.getUser().id).then(result => {
-      this.authS.getUser().friends = result
-    }).catch(err => {
-      console.log(err)
-    });
+    this.api.getUser(this.authS.getUser().id).then(result => {
+      this.owner = result
+      this.api.getAllFriends(this.owner.id).then(result => {
+        this.authS.getUser().friends = result
+      }).catch(err => {
+        console.log(err)
+      });
+    }).catch(err => { })
+
   }
   async ionViewDidEnter() {
     await this.loadUsers();

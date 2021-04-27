@@ -1,5 +1,5 @@
 import { Injectable, NgModule } from '@angular/core';
-import { BrowserModule, HAMMER_GESTURE_CONFIG,HammerGestureConfig, HammerModule } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -10,7 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import {  HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { CountdownModule } from 'ngx-countdown';
 import { ChronometerPage } from './pages/chronometer/chronometer.page';
@@ -24,7 +24,7 @@ import { AuthService } from './services/auth.service';
 import { PresentService } from './services/present.service';
 import { GalleryService } from './services/gallery.service';
 import { File } from '@ionic-native/file/ngx';
-import { FileTransfer} from '@ionic-native/file-transfer/ngx';
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { AddtrainingPage } from './pages/addtraining/addtraining.page';
 import { AddExercisePage } from './pages/add-exercise/add-exercise.page';
@@ -39,34 +39,36 @@ import * as Hammer from 'hammerjs';
 import { GraphPage } from './pages/graph/graph.page';
 import { HistoricalPage } from './pages/historical/historical.page';
 import { DatePipe } from '@angular/common';
+import { FavoritesPage } from './pages/favorites/favorites.page';
+import { PdfService } from './services/pdf.service';
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @Injectable()
-export class MyHammerConfig extends HammerGestureConfig  {
+export class MyHammerConfig extends HammerGestureConfig {
   overrides = <any>{
-     // override hammerjs default configuration
-     'pan': {
-       direction: Hammer.DIRECTION_ALL
-      }
- }
+    // override hammerjs default configuration
+    'pan': {
+      direction: Hammer.DIRECTION_ALL
+    }
+  }
 }
 @NgModule({
-  declarations: [AppComponent,ChronometerPage, 
-    AddtrainingPage,AddExercisePage,ListExercisePage,SelectExercisePage,
-    ExecuteTrainingPage,StartTrainingPage,AddFriendsPage,ListfriendsPage,GraphPage,HistoricalPage/*,LoginPage,SignupPage*/],
-  entryComponents: [ChronometerPage,AddtrainingPage,
-    AddExercisePage,ListExercisePage,SelectExercisePage,ExecuteTrainingPage,
-    StartTrainingPage,AddFriendsPage,ListfriendsPage,GraphPage,HistoricalPage/*,LoginPage,SignupPage*/],
-  imports: [BrowserModule, 
+  declarations: [AppComponent, ChronometerPage,
+    AddtrainingPage, AddExercisePage, ListExercisePage, SelectExercisePage,
+    ExecuteTrainingPage, StartTrainingPage, AddFriendsPage, ListfriendsPage, GraphPage, HistoricalPage, FavoritesPage/*,LoginPage,SignupPage*/],
+  entryComponents: [ChronometerPage, AddtrainingPage,
+    AddExercisePage, ListExercisePage, SelectExercisePage, ExecuteTrainingPage,
+    StartTrainingPage, AddFriendsPage, ListfriendsPage, GraphPage, HistoricalPage, FavoritesPage/*,LoginPage,SignupPage*/],
+  imports: [BrowserModule,
     CountdownModule,
     IonicModule.forRoot(),
-     AppRoutingModule,
-     ReactiveFormsModule,
-     HttpClientModule,
-     HammerModule,
-     TranslateModule.forRoot({
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    HammerModule,
+    TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: (createTranslateLoader),
@@ -86,11 +88,12 @@ export class MyHammerConfig extends HammerGestureConfig  {
     PresentService,
     GalleryService,
     AuthService,
+    PdfService,
     TimerService,
     TextToSpeech,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    {provide: HAMMER_GESTURE_CONFIG, useClass:MyHammerConfig }
+    { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

@@ -22,6 +22,7 @@ export class AddtrainingPage implements OnInit {
   training: training
   public task: FormGroup;
   public isPublic: boolean = false;
+  order=1;
   exercise: exercise;
   exercises: exercise[] = [];
   text;
@@ -74,12 +75,13 @@ export class AddtrainingPage implements OnInit {
         exercises: []
       }
     }
+    this.loadBTime();
   }
 
   addBTime() {
     this.timerS.addBTime();
     this.loadBTime();
-  } 
+  }
   addBTimePress() {
     this.timeout = setTimeout(() => {
       this.interval = setInterval(() => {
@@ -142,21 +144,21 @@ export class AddtrainingPage implements OnInit {
 
     if (this.trainingEdit.id != undefined) {
 
-      this.api.getAllFriends(this.authS.getUser().id).then(result=>{
-          this.authS.getUser().friends=result
+      this.api.getAllFriends(this.authS.getUser().id).then(result => {
+        this.authS.getUser().friends = result
       }).catch(err => {
         console.log(err)
       });
-     
+      let uf: user[] = await this.api.getAllUsersByIdTrainingFavorite(this.trainingEdit.id)
       this.training = {
         id: this.trainingEdit.id,
         title: this.task.get('title').value,
         time: (this.timerS.minBT * 60) + this.timerS.sBT,
         published: this.isPublic,
-        exercises: this.training.exercises,
-        creator: this.authS.getUser()
+        exercises: this.training.exercises.reverse(),
+        creator: this.authS.getUser(),
+        usersf: uf
       }
-      
       this.api.updateTraining(this.training).then(result => {
         this.training.exercises.forEach(element => {
           let e: exercise = {
@@ -169,7 +171,6 @@ export class AddtrainingPage implements OnInit {
             repTime: element.repTime,
             t: element.t
           }
-          
           this.api.updateExercise(e).then(result => { }).catch(err => { })
         });
         this.reset()
@@ -212,12 +213,12 @@ export class AddtrainingPage implements OnInit {
       });
     }
   }
- 
+
   clearPress() { //Cuando se termine de pulsar
     clearTimeout(this.timeout); //Limpiamos el timeout
     clearInterval(this.interval); //Limpiamos el intervalo
   };
-  
+
   reset() {
     this.timerS.minBT = 0;
     this.timerS.sBT = 5;
@@ -230,6 +231,13 @@ export class AddtrainingPage implements OnInit {
       this.isPublic = false;
     }
   }
+
+  reorderItem(ev) {
+    let itemToMove=this.training.exercises.splice(ev.detail.from, 1)[0];
+    this.training.exercises.splice(ev.detail.to,0,itemToMove)
+    ev.detail.complete()
+  }
+
   public exit() {
     this.modalController.dismiss();
   }

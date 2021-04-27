@@ -45,7 +45,8 @@ export class Tab4Page implements OnInit {
               creator: {
                 id: friend.id,
                 name: friend.name,
-                email: friend.email
+                email: friend.email,
+                avatar:friend.avatar
               }
             }
             this.trainings.push(t)

@@ -11,7 +11,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="contentBackground">
   <ion-refresher slot="fixed" (ionRefresh)="this.loadAll($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>

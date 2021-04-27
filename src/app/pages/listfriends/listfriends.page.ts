@@ -12,6 +12,7 @@ import { PresentService } from 'src/app/services/present.service';
 })
 export class ListfriendsPage implements OnInit {
   users: user[]
+  nUser:number
   constructor( private modalController: ModalController,
     private api: ApiService,
     private authS: AuthService,
@@ -27,6 +28,7 @@ export class ListfriendsPage implements OnInit {
     // await this.present.presentLoading;
     try {
       this.users = await this.api.getAllFriends(this.authS.getUser().id);
+      this.nUser=this.users.length
       if ($event) {
         $event.target.complete();
       }

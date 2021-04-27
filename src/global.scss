@@ -169,4 +169,28 @@
                border: transparent;
                resize: none;
           }
+
+          .nUser{
+            margin: auto;
+            color: #71747A;
+            font: bold;
+          }
+
+          .ion-toggleProfile {
+            height: 20px;
+            width: 45px;
+            --handle-background: no-repeat center / contain url('assets/imgs/candado-abierto.svg');
+            --handle-background-checked: no-repeat center / contain url("assets/imgs/candado.svg");
+          }
+
+          .ion-toggleTraining {
+            height: 20px;
+            width: 45px;
+            --handle-background: no-repeat center / contain url("assets/imgs/candado.svg");
+            --handle-background-checked:no-repeat center / contain url('assets/imgs/candado-abierto.svg');
+          }
+
+          .contentBackground{
+            --background:  url("assets/imgs/logoBackGround.png") no-repeat center !important;
+          }
 }

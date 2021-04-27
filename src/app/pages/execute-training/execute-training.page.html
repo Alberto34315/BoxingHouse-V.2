@@ -3,6 +3,18 @@
     <ion-button shape="round" (click)="this.exit()" color="success">
       <ion-icon name="arrow-undo-outline"></ion-icon>
     </ion-button>
+    <ion-button (click)="this.pdfGenerate()" fill="outline" color="danger">
+      <ion-icon src="./assets/imgs/pdf.svg" class="butt"></ion-icon>
+    </ion-button>
+    <div *ngIf="this.favCheck;then thenBlock else elseBlock"></div>
+    <ng-template #thenBlock>
+      <ion-icon (click)="this.favorite()" style="height: 30px;width: 30px; margin-right: 20px;" slot="end" name="star">
+      </ion-icon>
+    </ng-template>
+    <ng-template #elseBlock>
+      <ion-icon (click)="this.favorite()" style="height: 30px;width: 30px; margin-right: 20px;" slot="end"
+        name="star-outline"></ion-icon>
+    </ng-template>
   </ion-toolbar>
 </ion-header>
 
@@ -12,8 +24,8 @@
     <h2 class="center">{{this.trainingExe.title}}</h2>
   </ion-item>
   <ion-item>
-    <h5 class="center">{{'TAB2.breakT' | translate}}: {{bTime|async}}
-      <!--{{this.timerS.minBT}}:{{this.timerS.sBT}}-->
+    <h5 class="center">
+      {{'TAB2.breakT' | translate}}: {{bTime|async}}
     </h5>
   </ion-item>
   <ion-slides #sliderRef pager="true">

@@ -13,10 +13,10 @@
   <ion-list>
     <ion-item *ngFor="let item of records">
       <ion-item>
-        <ion-card>
+        <ion-card style="border: 1px solid #40444b;">
           <ion-card-header>
             <ion-card-subtitle *ngIf="this.format(item.localDateTime)">{{this.date.toLocaleDateString()}} {{this.date.toLocaleTimeString()}}</ion-card-subtitle>
-            <ion-card-title>{{item.idTrai.title}}</ion-card-title>
+            <ion-card-title style="text-align: center;">{{item.idTrai.title}}</ion-card-title>
           </ion-card-header>
 
           <ion-card-content>

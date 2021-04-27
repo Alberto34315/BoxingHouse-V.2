@@ -14,7 +14,10 @@
         "profile": "Profile",
         "logout": "Sign off",
         "historical":"Historical",
-        "graph":"Graph"
+        "graph":"Graph",
+        "public":"Public",
+        "private":"Private",
+        "favorites":"Favorites"
     },
     "TAB4": {
         "publications":"Publications",

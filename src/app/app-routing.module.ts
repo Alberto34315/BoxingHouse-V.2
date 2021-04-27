@@ -61,6 +61,10 @@ const routes: Routes = [
   {
     path: 'graph',
     loadChildren: () => import('./pages/graph/graph.module').then( m => m.GraphPageModule)
+  },
+  {
+    path: 'favorites',
+    loadChildren: () => import('./pages/favorites/favorites.module').then( m => m.FavoritesPageModule)
   }
 
 ];

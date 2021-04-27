@@ -37,6 +37,69 @@ export class ApiService {
   }
 
   /**
+   * Devuelve la promesa de un usuario, por el id del usuario
+   * @param id recibe un numbre o un String
+   */
+  public getUser(id?: number | string): Promise<user | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiUser;
+      if (id) {
+        endpoint += id;
+      }
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if (d) {
+            resolve(JSON.parse(d.data));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+ * Devuelve una promesa con una lista de los usuarios, que tienen relacion con un entrenamiento favorito (Pasamos el id del enrenamiento)
+ * @param id recibe un numbre o un String
+ */
+  public getAllUsersByIdTrainingFavorite(id?: number): Promise<user[] | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiUser + 'favoriteUser/' + id;
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if (d) {
+            resolve(JSON.parse(d.data));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+  * Devuelve una promesa con una lista de entrenamientos favoritos por el id del usuario
+  * @param id recibe un numbre o un String
+  */
+  public getAllTrainingsFromFavorites(id?: number): Promise<training[] | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiTraining + 'favoriteTraining/' + id;
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if (d) {
+            resolve(JSON.parse(d.data));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
   * Devuelve una promesa con todos los entrenamientos realizados de la base de datos
   * @param id recibe un numbre o un String
   */
@@ -144,11 +207,33 @@ export class ApiService {
 
   /**
      * Devuelve una promesa con el numero de entrenamientos realizados en una fecha
-     * @param id recibe un string
+     * @param date string
+     * @param id number
      */
-  public getNumberOfTrainingsForDate(date?: string,id?:number): Promise<number | null> {
+  public getNumberOfTrainingsForDate(date?: string, id?: number): Promise<number | null> {
     return new Promise((resolve, reject) => {
-      let endpoint = environment.endpoint + environment.apiRecord + "date/" + date + "%20%25/"+environment.apiUser+id;
+      let endpoint = environment.endpoint + environment.apiRecord + "date/" + date + "%20%25/" + environment.apiUser + id;
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if (d) {
+            resolve(JSON.parse(d.data));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+   * Devuelve una promesa con un 1 si el entrenamiento y el usuario se encuentran en la relacion y 0 si no
+   * @param idT number
+   * @param idU number
+   */
+  public isTrainingFavorite(idT?: number, idU?: number): Promise<number | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiTraining + 'isFavorite/' + idT + '/' + environment.apiUser + idU;
       this.http
         .get(endpoint, {}, this.header)
         .then(d => {
@@ -207,6 +292,26 @@ export class ApiService {
   public searchUserLessOwner(id?: number, name?: string): Promise<user[] | null> {
     return new Promise((resolve, reject) => {
       let endpoint = environment.endpoint + environment.apiUser + "searchUserLessOwner/" + id + "/" + name;
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if (d) {
+            resolve(JSON.parse(d.data));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+* Devuelve una promesa con una lista de entrenamientos favoritos buscados por title
+* @param id recibe un number
+*/
+  public searchTrainingsFromFavorites(id?: number, title?: string): Promise<training[] | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiTraining + "search/" + environment.apiUser + id + "/favoriteTraining/" + title;
       this.http
         .get(endpoint, {}, this.header)
         .then(d => {
@@ -340,6 +445,49 @@ export class ApiService {
         .catch(err => reject(err));
     });
   }
+
+  /**
+ * Devuelve una lista de ejercicios por el id del usuario, filtrando si ya se encuentran los ejercicios en el entrenamiento
+ * @param idU number
+ * @param idT number
+ */
+  public getAllExercisesByIdUserAndNotFoundTraining(idU?: number): Promise<exercise[] | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiExercise + environment.apiUser+ 'exercises/' + idU ;
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if (d) {
+            resolve(JSON.parse(d.data));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
+  /**
+* Devuelve una lista de ejercicios por el id del usuario, filtrando si ya se encuentran los ejercicios en el entrenamiento y por su nombre
+* @param idU number
+* @param idT number
+*/
+  public searchAllExercisesByIdUserAndNotFoundTraining(idU?: number, nameEx?: string): Promise<exercise[] | null> {
+    return new Promise((resolve, reject) => {
+      let endpoint = environment.endpoint + environment.apiExercise + environment.apiUser+'exercises/' + idU + '/search/' + nameEx;
+      this.http
+        .get(endpoint, {}, this.header)
+        .then(d => {
+          if (d) {
+            resolve(JSON.parse(d.data));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(err => reject(err));
+    });
+  }
+
   /**
    * Comprueba si el usuario existe en la base de datos
    * @param email string
@@ -351,7 +499,7 @@ export class ApiService {
       this.http.get(endpoint, {}, this.header)
         .then(d => {
           if (d) {
-
+            // console.log(d.data)
             resolve(JSON.parse(d.data));
 
           } else {
@@ -472,7 +620,10 @@ export class ApiService {
           .then(d => {
             resolve();
           })
-          .catch(err => reject(err));
+          .catch(err => {
+            console.log(err.error)
+            reject(err)
+          });
       } else {
         reject('No existe item');
       }
@@ -596,6 +747,27 @@ export class ApiService {
     });
   }
 
+  /**
+   * Crea la relacion entre un entrenamientos favorito y un usuario
+   * @param item recibe un training
+   * @param user recibe un user
+   */
+  public createTrainingFavorite(item: training, user: user): Promise<any> {
+    const endpoint = environment.endpoint + environment.apiTraining + 'insertFavorite/' + item.id + '/' + environment.apiUser + user.id;;
+    return new Promise((resolve, reject) => {
+      if (item) {
+        this.http.setDataSerializer('json'); //send body as json, needed
+        this.http
+          .post(endpoint, item, this.header)
+          .then(d => {
+            resolve(d.data);
+          })
+          .catch(err => reject(err));
+      } else {
+        reject('No existe item');
+      }
+    });
+  }
   //______________________________________________________________________________DELETE
   /**
    * Elimina el entrenamiento pasado
@@ -639,7 +811,7 @@ export class ApiService {
      */
   public removeTrainingFromRecord(item: any): Promise<void> {
     const id: any = item.id ? item.id : item;
-    const endpoint = environment.endpoint + environment.apiRecord+"trainingId/" + id;
+    const endpoint = environment.endpoint + environment.apiRecord + "trainingId/" + id;
     console.log(endpoint)
     return new Promise((resolve, reject) => {
       this.http
@@ -669,9 +841,9 @@ export class ApiService {
   }
 
   /**
-   * Elimina la relacion entre el ejercicio y el entrenamiento
-   * @param t training
-   * @param e exercise
+   * Elimina la relacion entre dos usuarios amigos
+   * @param owner user
+   * @param friend user
    */
   deleteFromFriendship(owner: user, friend: user): Promise<void> {
     const endpoint = environment.endpoint + environment.apiUser + owner.id + '/' + "friend/" + friend.id;
@@ -686,6 +858,40 @@ export class ApiService {
     });
   }
 
+  /**
+    * Elimina la relacion entre el entrenamiento favorito y un usuario
+    * @param t training
+    * @param u user
+    */
+  deleteTrainingFavorite(t: training, u: user): Promise<void> {
+    const endpoint = environment.endpoint + environment.apiTraining + 'delFavorite/' + t.id + '/' + environment.apiUser + u.id;
+    console.log(endpoint)
+    return new Promise((resolve, reject) => {
+      this.http
+        .delete(endpoint, {}, this.header)
+        .then(d => {
+          resolve();
+        })
+        .catch(err => reject(err));
+    });
+  }
+  /**
+    * Elimina la relacion entre el entrenamiento favorito y un usuario
+    * @param t training
+    * @param u user
+    */
+  deleteAllTrainingsFavorite(t: training): Promise<void> {
+    const endpoint = environment.endpoint + environment.apiTraining + 'delAllFavorite/' + t.id;
+    console.log(endpoint)
+    return new Promise((resolve, reject) => {
+      this.http
+        .delete(endpoint, {}, this.header)
+        .then(d => {
+          resolve();
+        })
+        .catch(err => reject(err));
+    });
+  }
 
   /**
    * Elimina el ejercicio pasado

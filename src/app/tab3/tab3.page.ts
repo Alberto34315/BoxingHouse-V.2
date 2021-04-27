@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { user } from '../model/user';
+import { FavoritesPage } from '../pages/favorites/favorites.page';
 import { GraphPage } from '../pages/graph/graph.page';
 import { HistoricalPage } from '../pages/historical/historical.page';
 import { ApiService } from '../services/api.service';
@@ -16,6 +17,7 @@ import { PresentService } from '../services/present.service';
 })
 export class Tab3Page implements OnInit {
   avatar: any;
+  public isPublic: boolean = true;
   user: user = {
     id: -1,
     name: '',
@@ -31,8 +33,13 @@ export class Tab3Page implements OnInit {
     private modalController: ModalController) { }
 
   ngOnInit() {
-    this.loadUser();
+    // this.loadUser();
   }
+
+  async ionViewDidEnter() {
+    await this.loadUser();
+  }
+
   async openHistorical(): Promise<any> {
     const modal = await this.modalController.create({
       component: HistoricalPage,
@@ -55,17 +62,39 @@ export class Tab3Page implements OnInit {
     return await modal.onWillDismiss();
   }
 
-  loadUser(){
-    this.user = {
-      id: this.authS.getUser().id,
-      name: this.authS.getUser().name,
-      avatar: this.authS.getUser().avatar,
-      pass: this.authS.getUser().pass,
-      email: this.authS.getUser().email,
-      lt:this.authS.getUser().lt,
-      le:this.authS.getUser().le,
-      lrecords:this.authS.getUser().lrecords,
-      friends:this.authS.getUser().friends
+  async openFavorites(): Promise<any> {
+    const modal = await this.modalController.create({
+      component: FavoritesPage,
+      cssClass: 'my-custom-class',
+      componentProps: {
+      }
+    });
+    await modal.present();
+    return await modal.onWillDismiss();
+  }
+
+  async loadUser() {
+    // await this.present.presentLoading;
+    try {
+      this.api.getUser(this.authS.getUser().id).then(result => {
+        this.user = {
+          id: result.id,
+          name: result.name,
+          avatar: result.avatar,
+          pass: result.pass,
+          email: result.email/*,
+          lt:this.authS.getUser().lt,
+          le:this.authS.getUser().le,
+          lrecords:this.authS.getUser().lrecords*/,
+          friends: result.friends,
+          privateCount: result.privateCount
+        } 
+         this.isPublic = this.user.privateCount;
+      }).catch(err => {
+
+      });
+    } catch (err) {
+      await this.present.presentToast("Error al cargar al usuario", "danger");
     }
   }
   public async setAvatar() {
@@ -75,18 +104,9 @@ export class Tab3Page implements OnInit {
         this.loadUser();
         this.present.dismissLoad();
       } else {
-        this.user = {
-          id: this.authS.getUser().id,
-          name: this.authS.getUser().name,
-          avatar: this.galleryS.myphoto,
-          pass: this.authS.getUser().pass,
-          email: this.authS.getUser().email,
-          lt:this.authS.getUser().lt,
-          le:this.authS.getUser().le,
-          lrecords:this.authS.getUser().lrecords,
-          friends:this.authS.getUser().friends
-        }
+        this.user.avatar = this.galleryS.myphoto;
         this.api.updateUser(this.user).then((respuesta) => {
+          this.loadUser();
         }).catch((err) => {
           console.log(err)
         });
@@ -97,7 +117,20 @@ export class Tab3Page implements OnInit {
       console.log(err)
     });
   }
-  
+  public async publish($event) {
+    if ($event.detail.checked) {
+      this.isPublic = true;
+    } else {
+      this.isPublic = false;
+    }
+    this.user.privateCount = this.isPublic
+    this.api.updateUser(this.user).then((respuesta) => {
+      this.loadUser();
+    }).catch((err) => {
+      console.log(err)
+    });
+    this.authS.setUser(this.user)
+  }
   public async logout() {
     await this.authS.logout();
     if (!this.authS.isLogged()) {

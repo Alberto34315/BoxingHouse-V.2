@@ -11,32 +11,36 @@
   <form id="form" [formGroup]="task" (ngSubmit)="this.save()">
     <ion-item>
       <ion-label>{{'TRAINING.publish' | translate}}</ion-label>
-      <ion-toggle formControlName="publish" [(ngModel)]="this.isPublic" (ionChange)="publish($event)"></ion-toggle>
+      <ion-toggle class="ion-toggleTraining" formControlName="publish" [(ngModel)]="this.isPublic"
+        (ionChange)="publish($event)"></ion-toggle>
     </ion-item>
     <ion-item lines="full">
       <ion-label position="floating">{{'TRAINING.title' | translate}}</ion-label>
       <ion-input type="text" formControlName="title"></ion-input>
     </ion-item>
     <ion-list>
-      <ion-item *ngFor="let entry of  this.training.exercises">
-        <ion-label>
-
-          <ion-item>
-            <ion-button (click)="this.removeExercise(entry)" color="light">
-              <ion-icon name="close-outline"></ion-icon>
-            </ion-button>
+      <ion-reorder-group disabled="false" (ionItemReorder)="reorderItem($event)" id="reorder">
+        <ion-item *ngFor="let entry of  this.training.exercises;let i=index">
+          <ion-label>
             <ion-item>
-              <ion-thumbnail slot="start">
-                <ion-img [src]="entry.photo"></ion-img>
-              </ion-thumbnail>
-              <div>
-                <h1>{{entry.nameExercise}}</h1>
-                {{entry.description}}
-              </div>
+              <ion-button (click)="this.removeExercise(entry)" color="light">
+                <ion-icon name="close-outline"></ion-icon>
+              </ion-button>
+              <ion-item>
+                <ion-thumbnail slot="start">
+                  <ion-img [src]="entry.photo"></ion-img>
+                </ion-thumbnail>
+                <div>
+                  <h1>{{entry.nameExercise}}</h1>
+                  {{entry.description}}
+                </div>
+              </ion-item>
+              {{i+1}}º
+              <ion-reorder></ion-reorder>
             </ion-item>
-          </ion-item>
-        </ion-label>
-      </ion-item>
+          </ion-label>
+        </ion-item>
+      </ion-reorder-group>
     </ion-list>
     <div class="centrado">
       <ion-button (click)="this.selectE()" style="margin: auto;" shape="round">
@@ -61,19 +65,5 @@
         <ion-icon name="save-outline"></ion-icon>
       </ion-button>
     </ion-fab>
-    <!--  <ion-button class="bottom" shape="round" expand="full" type="submit">{{'EXERCISE.save' | translate}}</ion-button>-->
   </form>
-  <!--
-  <ion-fab horizontal="start" vertical="bottom"  slot="fixed">
-    <ion-fab-button (click)="this.removeExercise()">
-      <ion-icon name="remove"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
-    <ion-fab-button (click)="this.addExercise()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-   -->
-
 </ion-content>

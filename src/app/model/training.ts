@@ -8,5 +8,6 @@ export interface training{
     time?:number,
     exercises?:exercise[],
     published?:boolean,
-    lr?:records[]
+    lr?:records[],
+    usersf?:user[]
 }

@@ -26,16 +26,13 @@ export class HistoricalPage implements OnInit {
     await this.loadAll();
   }
   public async loadAll($event = null) {
-    // await this.present.presentLoading;
     try {
       this.records = await this.api.getRecordsByUser(this.authS.getUser().id);
       if ($event) {
         $event.target.complete();
       }
-      //    this.present.dismissLoad();
     } catch (err) {
-      this.records = null; //vista
-      //      this.present.dismissLoad();
+      this.records = null;
       await this.present.presentToast("Error al cargar los entrenamientos", "danger");
     }
   }
@@ -53,15 +50,12 @@ export class HistoricalPage implements OnInit {
     let value = $event.detail.value;
     value = value.trim();
     if (value !== '') {
-      //await this.ui.showLoading();
-      this.api.searchRecords(this.authS.getUser().id,value)
+      this.api.searchRecords(this.authS.getUser().id, value)
         .then(d => {
           this.records = d;
         })
         .catch(async err => await this.present.presentToast(err.error, "danger"))
         .finally(async () => {
-          // await this.ui.hideLoading();
-          // this.myInput.setFocus();
         });
     } else {
       await this.loadAll();

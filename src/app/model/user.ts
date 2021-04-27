@@ -12,5 +12,7 @@ export interface user{
     le?:exercise[],
     friends?:user[],
     lrecords?:records[],
-    isChecked?:boolean
+    isChecked?:boolean,
+    privateCount?:boolean,
+    trainingsf?:training[]
 }

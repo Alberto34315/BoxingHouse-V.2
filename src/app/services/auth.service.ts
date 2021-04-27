@@ -66,7 +66,12 @@ export class AuthService {
               name: u['name'],
               avatar: u['avatar'],
               pass: u['pass'],
-              email:u['email']
+              email:u['email'],
+              friends:u['friends'],
+             /* le:u['le'],
+              lt:u['lt'],
+              lrecords:u['lrecords'],*/
+              privateCount:u['privateCount']
             }
           }
         } catch (err) {
@@ -75,7 +80,8 @@ export class AuthService {
             name: '',
             avatar: '',
             pass: '',
-            email:''
+            email:'',
+            privateCount:false
           }
         }
         await this.storage.setItem("user",this.user);

@@ -37,23 +37,22 @@ export class Tab1Page {
     await this.loadAll();
   }
   public async loadAll($event = null) {
-    // await this.present.presentLoading;
     try {
       this.trainings = await this.api.getTrainingsByUser(this.authS.getUser().id);
       if ($event) {
         $event.target.complete();
       }
-      //    this.present.dismissLoad();
     } catch (err) {
-      this.trainings = null; //vista
-      //      this.present.dismissLoad();
+      this.trainings = null;
       await this.present.presentToast("Error al cargar los entrenamientos", "danger");
     }
   }
+
   async addtraining() {
     await this.openAddTraining();
     await this.loadAll();
   }
+
   async editraining(t: training) {
     await this.openAddTraining(t);
     await this.loadAll();
@@ -79,22 +78,23 @@ export class Tab1Page {
     await modal.present();
     return await modal.onWillDismiss();
   }
+
   async addexercise() {
     await this.openAddExercise();
     await this.loadAll();
   }
+
   async openAddExercise(): Promise<any> {
     const modal = await this.modalController.create({
       component: AddExercisePage,
       cssClass: 'my-custom-class',
 
     });
-
     await modal.present();
     return await modal.onWillDismiss();
   }
-  async openExecuteTraining(t?: any): Promise<any> {
 
+  async openExecuteTraining(t?: training): Promise<any> {
     const modal = await this.modalController.create({
       component: ExecuteTrainingPage,
       cssClass: 'my-custom-class',
@@ -102,14 +102,15 @@ export class Tab1Page {
         trainingExe: t
       }
     });
-
     await modal.present();
     return await modal.onWillDismiss();
   }
+
   async listexercise() {
     await this.openListExercise();
     await this.loadAll();
   }
+
   async openListExercise(): Promise<any> {
     const modal = await this.modalController.create({
       component: ListExercisePage,
@@ -131,7 +132,7 @@ export class Tab1Page {
         })
         .catch(async err => await this.present.presentToast(err.error, "danger"))
         .finally(async () => {
-          
+
         });
     } else {
       await this.loadAll();
@@ -172,7 +173,11 @@ export class Tab1Page {
       });
     }
     setTimeout(() => {
-      this.api.removeTrainingFromRecord(item).then(async d =>{})
+      this.api.removeTrainingFromRecord(item).then(async d => { })
+        .catch(async err => {
+          console.log(err)
+        })
+      this.api.deleteAllTrainingsFavorite(item).then(async d => { })
         .catch(async err => {
           console.log(err)
         })
@@ -183,8 +188,8 @@ export class Tab1Page {
     }, 500);
   }
 
-  loadBTime(item?:training):boolean {
-    let flag:boolean=true;
+  loadBTime(item?: training): boolean {
+    let flag: boolean = true;
     if (item.time < 60) {
       this.m = 0;
       this.s = item.time
