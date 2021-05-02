@@ -41,6 +41,7 @@ import { HistoricalPage } from './pages/historical/historical.page';
 import { DatePipe } from '@angular/common';
 import { FavoritesPage } from './pages/favorites/favorites.page';
 import { PdfService } from './services/pdf.service';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -91,6 +92,7 @@ export class MyHammerConfig extends HammerGestureConfig {
     PdfService,
     TimerService,
     TextToSpeech,
+    FileOpener,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig }
   ],

@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { exercise } from '../model/exercise';
 import { training } from '../model/training';
 import { File } from '@ionic-native/file/ngx';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,10 @@ export class PdfService {
   s;
   timeExer: BehaviorSubject<string> = new BehaviorSubject("00:00");
   pdfObj = null;
-  constructor(private http: HttpClient, private plt: Platform, private file: File) {
+  constructor(private http: HttpClient, 
+    private plt: Platform,
+     private file: File,
+     private fileOp:FileOpener) {
     this.http.get("../../assets/imgs/logoPDF.json").subscribe(result => {
       this.logo = result
     })
@@ -173,15 +177,10 @@ export class PdfService {
     if (this.plt.is('cordova')) {
       this.pdfObj.getBuffer((buffer) => {
         var blob = new Blob([buffer], { type: 'application/pdf' });
- 
-        console.log("HOLA")
-        console.log(this.file.dataDirectory)
-
-        // Save the PDF to the data Directory of our App
-        this.file.writeFile(this.file.externalRootDirectory+'/Download/', 'training.pdf', blob, { replace: true }).then(fileEntry => {
-          
+        this.file.writeFile(this.file.dataDirectory,'training.pdf',blob,{replace:true}).then(fileEntry=>{
+          this.fileOp.open(this.file.dataDirectory+'training.pdf','application/pdf')
         })
-      });
+      })
     } else {
       // On a browser simply use download!
       this.pdfObj.download();
