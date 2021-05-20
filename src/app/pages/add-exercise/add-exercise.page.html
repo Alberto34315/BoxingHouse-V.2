@@ -41,7 +41,7 @@
         <ion-icon name="add-circle-outline"></ion-icon>
       </ion-button>
     </ion-item>
-    <ion-button class="bottom btn-flotante" type="submit" expand="block" shape="round">{{'EXERCISE.save' | translate}}
+    <ion-button [disabled]="!task.valid" class="bottom btn-flotante" type="submit" expand="block" shape="round">{{'EXERCISE.save' | translate}}
     </ion-button>
   </form>
 </ion-content>
