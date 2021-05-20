@@ -11,6 +11,9 @@
 
 <ion-content>
   <form id="form" [formGroup]="task" (ngSubmit)="this.save()">
+    <ion-refresher slot="fixed" (ionRefresh)="this.loadAll($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
     <ion-list>
       <ion-item *ngFor="let entry of exercises">
         <ion-label>
@@ -27,6 +30,10 @@
         <ion-checkbox (click)="entry.isChecked=$event.currentTarget.checked" formControlName="check" slot="end"></ion-checkbox>
       </ion-item>
     </ion-list>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
     <ion-button class="bottom" type="submit" expand="block" shape="round">{{'EXERCISE.save' | translate}}
     </ion-button>
   </form>

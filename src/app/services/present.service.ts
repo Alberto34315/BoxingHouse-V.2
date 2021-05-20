@@ -1,11 +1,21 @@
 import { Injectable } from '@angular/core';
 import { LoadingController, ToastController } from '@ionic/angular';
+import { LoadingOptions } from '@ionic/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PresentService {
-
+  private isLoading: any;
+  options: LoadingOptions = {
+    message: '<ion-spinner name="circles" paused></ion-spinner>',
+    cssClass: 'loader',
+    translucent: true,
+    showBackdrop: true,
+    spinner: null,
+    mode: 'md',
+    keyboardClose: true
+  };
   constructor(private loadingController: LoadingController,
     private toastController: ToastController) { }
 
@@ -13,12 +23,11 @@ export class PresentService {
    * Funcion que ejecuta el Loading
    */
   async presentLoading() {
-    const loading = await this.loadingController.create({
-      cssClass: 'my-custom-class',
-      message: '',
-      spinner: "crescent"
-    });
-    await loading.present();
+    if (this.isLoading) {
+      this.loadingController.dismiss();
+    }
+    this.isLoading = await this.loadingController.create(this.options);
+    await this.isLoading.present();
   }
   /**
    * Funcion que muestra un toast
@@ -35,10 +44,11 @@ export class PresentService {
     toast.present();
   }
 
- /**
- * Funcion que detiene el Loading
- */
-  async dismissLoad() {
-    this.loadingController.dismiss();
+  /**
+  * Funcion que detiene el Loading
+  */
+  public async dismissLoad() {
+    await this.loadingController.dismiss();
+    this.isLoading = null;
   }
 }

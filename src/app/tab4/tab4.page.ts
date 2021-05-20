@@ -16,7 +16,9 @@ import { PresentService } from '../services/present.service';
 })
 export class Tab4Page implements OnInit {
 
-  trainings: training[]
+  num: number = 0;
+  trainings: training[] = []
+  search
   constructor(private api: ApiService,
     private authS: AuthService,
     private modalController: ModalController,
@@ -25,50 +27,71 @@ export class Tab4Page implements OnInit {
   ngOnInit() {
   }
   async ionViewDidEnter() {
-    await this.loadAll();
+    await this.refrescar()
   }
   public async loadAll($event = null) {
-    // await this.present.presentLoading;
-    this.trainings = []
-    this.authS.getUser().friends = await this.api.getAllFriends(this.authS.getUser().id);
-
     try {
-      this.authS.getUser().friends.forEach(friend => {
-        this.api.getAllTrainingsByIdUserIsPublished(friend.id).then(result => {
-          result.forEach(element => {
-            let t: training = {
-              id: element.id,
-              title: element.title,
-              time: element.time,
-              published: element.published,
-              exercises: element.exercises,
-              creator: {
-                id: friend.id,
-                name: friend.name,
-                email: friend.email,
-                avatar:friend.avatar
+      this.present.presentLoading().then(async res => {
+        this.authS.getUser().friends = await this.api.getAllFriends(this.authS.getUser().id);
+        if ($event) {
+          $event.target.complete();
+          this.num = 0
+          this.trainings = []
+        }
+        this.authS.getUser().friends.forEach(friend => {
+          this.api.getAllTrainingsByIdUserIsPublished(friend.id, this.num).then(result => {
+            result.forEach(element => {
+              let t: training = {
+                id: element.id,
+                title: element.title,
+                time: element.time,
+                published: element.published,
+                exercises: element.exercises,
+                creator: {
+                  id: friend.id,
+                  name: friend.name,
+                  email: friend.email,
+                  avatar: friend.avatar
+                }
               }
-            }
-            this.trainings.push(t)
+              this.trainings = this.trainings.concat(t)
+
+            });
+          }).catch(err => {
+            console.log(err)
           });
-        }).catch(err => {
-          console.log(err)
         });
-      });
-      if ($event) {
-        $event.target.complete();
-      }
-      //    this.present.dismissLoad();
+        if (this.trainings != null || this.trainings != undefined) {
+          this.present.dismissLoad()
+        }
+      }).catch(err => { console.log(err) })
     } catch (err) {
-      this.trainings = null; //vista
-      //      this.present.dismissLoad();
+      this.trainings = null;
       console.log(err)
       await this.present.presentToast("Error al cargar los entrenamientos", "danger");
     }
   }
+  refrescar() {
+    this.num = 0
+    this.trainings = []
+    this.loadAll();
+}
+  loadMore($event = null) {
+    setTimeout(() => {
+      this.num += 10
+      if(this.search!=undefined){
+        console.log(this.num)
+        this.searchTrainingsFriends(this.search)
+      }else{
+        this.loadAll()
+      }
+      $event.target.complete();
+    }, 500);
+  }
+
   async openExecuteTrainingBtn(t: training) {
     await this.openExecuteTraining(t);
-    await this.loadAll();
+    await this.refrescar();
   }
   async openExecuteTraining(t?: any): Promise<any> {
 
@@ -86,7 +109,7 @@ export class Tab4Page implements OnInit {
 
   async openListFriendsBtn() {
     await this.openListFriends();
-    await this.loadAll();
+    await this.refrescar();
   }
 
   async openListFriends(): Promise<any> {
@@ -101,9 +124,7 @@ export class Tab4Page implements OnInit {
 
   async openAddFriendBtn() {
     await this.openAddFriend();
-    setTimeout(() => {
-      this.loadAll();
-    }, 100);
+    await this.refrescar()
   }
 
   async openAddFriend(): Promise<any> {
@@ -112,27 +133,36 @@ export class Tab4Page implements OnInit {
       cssClass: 'my-custom-class',
 
     });
-    
+
     await modal.present();
     return await modal.onWillDismiss();
   }
 
-  
-  public async searchTrainingsFriends($event){
-    this.trainings = []
-    let value = $event.detail.value;
+
+  public async searchTrainingsFriends($event) {
+    let value
+    if($event.detail!=undefined){
+       value = $event.detail.value;
+      this.trainings=[]
+      this.num=0
+    }else{
+      value=$event
+      console.log("HOLA "+value)
+    }
     value = value.trim();
-    if (value !== '') {
-      this.api.searchTrainingOfFriendsByTitle(value, this.authS.getUser().id)
-       .then(d => {
-          this.trainings = d;
+    this.search=value
+    if (value != '') {
+      this.api.searchTrainingOfFriendsByTitle(value, this.authS.getUser().id, this.num)
+        .then(d => {
+          this.trainings = this.trainings.concat(d);
         })
         .catch(async err => await this.present.presentToast(err.error, "danger"))
         .finally(async () => {
-          
+
         });
     } else {
-      await this.loadAll();
+      this.search=undefined
+      this.refrescar()
     }
   }
 }

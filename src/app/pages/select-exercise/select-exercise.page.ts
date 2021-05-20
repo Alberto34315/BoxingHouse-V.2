@@ -15,8 +15,10 @@ import { PresentService } from 'src/app/services/present.service';
 export class SelectExercisePage implements OnInit {
 
   @Input("training") training: training;
-  exercises: exercise[];
+  exercises: exercise[] = [];
   exercise: exercise;
+  num: number = 0;
+  search
   public task: FormGroup;
   constructor(private api: ApiService,
     private modalController: ModalController,
@@ -32,24 +34,57 @@ export class SelectExercisePage implements OnInit {
   }
 
   async ionViewDidEnter() {
-    await this.loadAll();
+    await this.refrescar()
   }
-  public async loadAll() {
+  public async loadAll($event = null) {
+    if ($event) {
+      $event.target.complete();
+      this.num = 0
+      this.exercises = []
+    }
     if (this.training.id == undefined) {
       try {
-        this.exercises = await this.api.getExercisesByUser(this.authS.getUser().id);
+        this.present.presentLoading().then(async res => {
+          this.exercises = this.exercises.concat(await this.api.getExercisesByUser(this.authS.getUser().id, this.num));
+          if (this.exercises != null || this.exercises != undefined) {
+            this.present.dismissLoad()
+          }
+        }).catch(err => { console.log(err) })
       } catch (err) {
         this.exercises = null;
         await this.present.presentToast("Error al cargar los entrenamientos", "danger");
       }
     } else {
       try {
-        this.exercises = await this.api.getAllExercisesByIdUserAndNotFoundTraining(this.authS.getUser().id);
+        this.present.presentLoading().then(async res => {
+          this.exercises = this.exercises.concat(await this.api.getAllExercisesByIdUserAndNotFoundTraining(this.authS.getUser().id, this.num));
+          if (this.exercises != null || this.exercises != undefined) {
+            this.present.dismissLoad()
+          }
+        }).catch(err => { console.log(err) })
       } catch (err) {
         this.exercises = null;
         await this.present.presentToast("Error al cargar los entrenamientos", "danger");
       }
     }
+  }
+
+  refrescar() {
+    this.num = 0
+    this.exercises = []
+    this.loadAll();
+  }
+
+  loadMore($event = null) {
+    setTimeout(() => {
+      this.num += 10
+      if (this.search != undefined) {
+        this.searchExercise(this.search)
+      } else {
+        this.loadAll()
+      }
+      $event.target.complete();
+    }, 500);
   }
 
   public save() {
@@ -72,24 +107,33 @@ export class SelectExercisePage implements OnInit {
   }
 
   public async searchExercise($event) {
-    let value = $event.detail.value;
+    let value
+    if ($event.detail != undefined) {
+      value = $event.detail.value;
+      this.exercises = []
+      this.num = 0
+    } else {
+      value = $event
+    }
     value = value.trim();
-    if (value !== '') {
+    this.search = value
+    if (value != '') {
       if (this.training.id == undefined) {
-        this.api.searchExerciseByTitle(value, this.authS.getUser().id)
+        this.api.searchExerciseByTitle(value, this.authS.getUser().id, this.num)
           .then(d => {
-            this.exercises = d;
+            this.exercises = this.exercises.concat(d);
           }).catch(async err => await this.present.presentToast(err.error, "danger"))
           .finally(async () => { });
       } else {
-        this.api.searchAllExercisesByIdUserAndNotFoundTraining(this.authS.getUser().id, value)
+        this.api.searchAllExercisesByIdUserAndNotFoundTraining(this.authS.getUser().id, value, this.num)
           .then(d => {
-            this.exercises = d;
+            this.exercises = this.exercises.concat(d);
           }).catch(async err => await this.present.presentToast(err.error, "danger"))
           .finally(async () => { });
       }
     } else {
-      await this.loadAll();
+      this.search = undefined
+      this.refrescar()
     }
   }
 

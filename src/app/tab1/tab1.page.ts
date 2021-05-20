@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { AlertController, IonSearchbar, ModalController } from '@ionic/angular';
 import { BehaviorSubject } from 'rxjs';
+import { search } from 'tstl/ranges/algorithm';
 import { records } from '../model/records';
 import { training } from '../model/training';
 import { AddExercisePage } from '../pages/add-exercise/add-exercise.page';
@@ -17,7 +18,7 @@ import { PresentService } from '../services/present.service';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
-  trainings: training[]
+  trainings: training[] = []
   text;
   m;
   s;
@@ -25,6 +26,8 @@ export class Tab1Page {
   sbt;
   timeout;
   interval;
+  num: number = 0;
+  search
   bTime: BehaviorSubject<string> = new BehaviorSubject("00:00");
   @ViewChild('input', { static: false }) myInput: IonSearchbar;
   constructor(private api: ApiService,
@@ -34,28 +37,54 @@ export class Tab1Page {
     private present: PresentService) { }
 
   async ionViewDidEnter() {
-    await this.loadAll();
+    await this.refrescar()
   }
   public async loadAll($event = null) {
     try {
-      this.trainings = await this.api.getTrainingsByUser(this.authS.getUser().id);
       if ($event) {
         $event.target.complete();
+        this.num = 0
+        this.trainings = []
       }
+      this.present.presentLoading().then(async res => {
+        this.trainings = this.trainings.concat(await this.api.getTrainingsByUser(this.authS.getUser().id, this.num));
+        if (this.trainings != null || this.trainings != undefined) {
+          this.present.dismissLoad()
+        }
+      }).catch(err => { console.log(err) })
+
     } catch (err) {
       this.trainings = null;
       await this.present.presentToast("Error al cargar los entrenamientos", "danger");
     }
   }
 
+  loadMore($event = null) {
+    setTimeout(() => {
+      this.num += 10
+        if(this.search!=undefined){
+          this.searchTraining(this.search)
+        }else{
+          this.loadAll()
+        }
+      $event.target.complete();
+    }, 500);
+  }
+
+  refrescar() {
+      this.num = 0
+      this.trainings = []
+      this.loadAll();
+  }
+
   async addtraining() {
     await this.openAddTraining();
-    await this.loadAll();
+    await this.refrescar();
   }
 
   async editraining(t: training) {
     await this.openAddTraining(t);
-    await this.loadAll();
+    await this.refrescar();
   }
 
   async openAddTraining(t?: any): Promise<any> {
@@ -81,7 +110,7 @@ export class Tab1Page {
 
   async addexercise() {
     await this.openAddExercise();
-    await this.loadAll();
+    await this.refrescar();
   }
 
   async openAddExercise(): Promise<any> {
@@ -108,7 +137,7 @@ export class Tab1Page {
 
   async listexercise() {
     await this.openListExercise();
-    await this.loadAll();
+    await this.refrescar();
   }
 
   async openListExercise(): Promise<any> {
@@ -121,21 +150,30 @@ export class Tab1Page {
     await modal.present();
     return await modal.onWillDismiss();
   }
-
+  
   public async searchTraining($event) {
-    let value = $event.detail.value;
+    let value
+    if($event.detail!=undefined){
+       value = $event.detail.value;
+      this.trainings=[]
+      this.num=0
+    }else{
+      value=$event
+    }
     value = value.trim();
-    if (value !== '') {
-      this.api.searchByTitle(value, this.authS.getUser().id)
+    this.search=value
+    if (value != '') {
+      this.api.searchByTitle(value, this.authS.getUser().id, this.num)
         .then(d => {
-          this.trainings = d;
+          this.trainings = this.trainings.concat(d);
         })
         .catch(async err => await this.present.presentToast(err.error, "danger"))
         .finally(async () => {
 
         });
     } else {
-      await this.loadAll();
+      this.search=undefined
+      this.refrescar()
     }
   }
 
@@ -181,11 +219,11 @@ export class Tab1Page {
         .catch(async err => {
           console.log(err)
         })
-      this.api.removeTraining(item).then(async d => await this.loadAll())
+      this.api.removeTraining(item).then(async d => await this.refrescar())
         .catch(async err => {
           console.log(err)
         })
-    }, 500);
+    }, 200);
   }
 
   loadBTime(item?: training): boolean {

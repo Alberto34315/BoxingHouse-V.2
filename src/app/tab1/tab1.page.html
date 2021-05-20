@@ -1,10 +1,10 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      <ion-icon  class="gloveIco2" src="./assets/imgs/boxing-glove.svg"></ion-icon>
+      <ion-icon class="gloveIco2" src="./assets/imgs/boxing-glove.svg"></ion-icon>
       {{'TAB1.training' | translate}}
-    </ion-title> 
-  <app-popover slot="end"></app-popover>
+    </ion-title>
+    <app-popover slot="end"></app-popover>
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar #input showCancelButton="focus" debounce="500" (ionChange)="searchTraining($event)"></ion-searchbar>
@@ -17,41 +17,46 @@
   </ion-refresher>
   <ion-list>
     <ion-item-sliding *ngFor="let item of trainings">
-     <ion-item-options side="start" (click)="editraining(item)">
+      <ion-item-options side="start" (click)="editraining(item)">
         <ion-item-option color="primary">
           <ion-icon slot="icon-only" name="create"></ion-icon>
         </ion-item-option>
       </ion-item-options>
       <ion-item (click)="openExecuteTraining(item)">
-       <div><h1>{{item.title}}</h1>
-        <p *ngIf="loadBTime(item)">
-          {{'TAB2.breakT' | translate}}: {{bTime|async}}
-        </p>
-      </div>
+        <div>
+          <h1>{{item.title}}</h1>
+          <p *ngIf="loadBTime(item)">
+            {{'TAB2.breakT' | translate}}: {{bTime|async}}
+          </p>
+        </div>
       </ion-item>
       <ion-item-options side="end">
-       <ion-item-option color="danger" (click)="this.removetAlert(item)">
+        <ion-item-option color="danger" (click)="this.removetAlert(item)">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
- <ion-fab horizontal="end" vertical="bottom" slot="fixed">
-  <ion-fab-button >
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-  <ion-fab-list side="top">
-    <ion-fab-button (click)="this.addtraining()">
-      <ion-icon src="./assets/imgs/weightlifter.svg"></ion-icon>
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
     </ion-fab-button>
-  </ion-fab-list>
-  <ion-fab-list side="start">
-    <ion-fab-button (click)="this.addexercise()">
-      <ion-icon name="barbell-sharp"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-button (click)="this.listexercise()">
-      <ion-icon name="clipboard-sharp"></ion-icon>
-    </ion-fab-button>
-  </ion-fab-list>
-</ion-fab>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="this.addtraining()">
+        <ion-icon src="./assets/imgs/weightlifter.svg"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+    <ion-fab-list side="start">
+      <ion-fab-button (click)="this.addexercise()">
+        <ion-icon name="barbell-sharp"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="this.listexercise()">
+        <ion-icon name="clipboard-sharp"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

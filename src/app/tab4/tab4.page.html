@@ -12,40 +12,43 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content #content>
   <ion-refresher slot="fixed" (ionRefresh)="this.loadAll($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-item *ngFor="let item of trainings">
-    <ion-card style="border: 1px solid #40444b;" (click)="this.openExecuteTrainingBtn(item)">
-      <ion-card-header>
-        <ion-card-subtitle *ngIf="item.creator!=undefined">
-          <ion-chip outline color="dark">
-            <ion-avatar>
-              <img [src]="item.creator.avatar">
-            </ion-avatar>
-            <ion-label>
-              {{item.creator.name}}
-            </ion-label>
-          </ion-chip>
-        </ion-card-subtitle>
-        <ion-card-title>{{item.title}}</ion-card-title>
-      </ion-card-header>
 
-      <ion-card-content>
+  <ion-list>
+    <ion-item *ngFor="let item of trainings">
+      <ion-card style="border: 1px solid #40444b;" (click)="this.openExecuteTrainingBtn(item)">
+        <ion-card-header>
+          <ion-card-subtitle *ngIf="item.creator!=undefined">
+            <ion-chip outline color="dark">
+              <ion-avatar>
+                <img [src]="item.creator.avatar">
+              </ion-avatar>
+              <ion-label>
+                {{item.creator.name}}
+              </ion-label>
+            </ion-chip>
+          </ion-card-subtitle>
+          <ion-card-title>{{item.title}}</ion-card-title>
+        </ion-card-header>
 
-        <ion-slides>
-          <ion-slide style="height: auto; width: 100%;" *ngFor="let i of item.exercises">
-            <div>
-              <img class="exePhoto" [src]="i.photo" />
-              <h2>{{i.nameExercise}}</h2>
-              <p>{{i.description}}</p>
-            </div>
-          </ion-slide>
-        </ion-slides>
-      </ion-card-content>
-    </ion-card>
-  </ion-item>
+        <ion-card-content>
+
+          <ion-slides>
+            <ion-slide style="height: auto; width: 100%;" *ngFor="let i of item.exercises">
+              <div>
+                <img class="exePhoto" [src]="i.photo" />
+                <h2>{{i.nameExercise}}</h2>
+                <p>{{i.description}}</p>
+              </div>
+            </ion-slide>
+          </ion-slides>
+        </ion-card-content>
+      </ion-card>
+    </ion-item>
+  </ion-list>
   <ion-fab horizontal="end" vertical="bottom" slot="fixed">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
@@ -61,4 +64,9 @@
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

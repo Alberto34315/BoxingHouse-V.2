@@ -12,7 +12,9 @@ import { ExecuteTrainingPage } from '../execute-training/execute-training.page';
   styleUrls: ['./favorites.page.scss'],
 })
 export class FavoritesPage implements OnInit {
-  trainings: training[]
+  trainings: training[] = []
+  num: number = 0;
+  search
   constructor(private modalController: ModalController,
     private api: ApiService,
     private authS: AuthService,
@@ -21,27 +23,42 @@ export class FavoritesPage implements OnInit {
   ngOnInit() {
   }
   async ionViewDidEnter() {
-    await this.loadAll();
+    await this.refrescar()
   }
   public async loadAll($event = null) {
-    // await this.present.presentLoading;
     try {
-      this.trainings = await this.api.getAllTrainingsFromFavorites(this.authS.getUser().id);
-
       if ($event) {
         $event.target.complete();
+        this.num = 0
+        this.trainings = []
       }
-      //    this.present.dismissLoad();
+      this.present.presentLoading().then(async res => {
+        this.trainings = this.trainings.concat(await this.api.getAllTrainingsFromFavorites(this.authS.getUser().id, this.num));
+        if (this.trainings != null || this.trainings != undefined) {
+          this.present.dismissLoad()
+        }
+      }).catch(err => { console.log(err) })
     } catch (err) {
-      this.trainings = null; //vista
-      //      this.present.dismissLoad();
+      this.trainings = null;
       await this.present.presentToast("Error al cargar los entrenamientos", "danger");
     }
   }
 
+  loadMore($event = null) {
+    setTimeout(() => {
+      this.num += 10
+      if(this.search!=undefined){
+        this.searchFavorite(this.search)
+      }else{
+        this.loadAll()
+      }
+      $event.target.complete();
+    }, 500);
+  }
+
   async executeTraining(t?: any) {
     await this.openExecuteTraining(t);
-    await this.loadAll();
+    await this.refrescar();
   }
   async openExecuteTraining(t?: any): Promise<any> {
 
@@ -57,19 +74,34 @@ export class FavoritesPage implements OnInit {
     return await modal.onWillDismiss();
   }
 
+  refrescar() {
+    this.num = 0
+    this.trainings = []
+    this.loadAll();
+}
+
   public async searchFavorite($event) {
-    let value = $event.detail.value;
+    let value
+    if($event.detail!=undefined){
+       value = $event.detail.value;
+      this.trainings=[]
+      this.num=0
+    }else{
+      value=$event
+    }
     value = value.trim();
-    if (value !== '') {
-      this.api.searchTrainingsFromFavorites(this.authS.getUser().id, value)
+    this.search=value
+    if (value != '') {
+      this.api.searchTrainingsFromFavorites(this.authS.getUser().id, value, this.num)
         .then(d => {
-          this.trainings = d;
+          this.trainings = this.trainings.concat(d);
         })
         .catch(async err => await this.present.presentToast(err.error, "danger"))
         .finally(async () => {
         });
-    } else {
-      await this.loadAll();
+    } else { 
+      this.search=undefined
+      this.refrescar()
     }
   }
 

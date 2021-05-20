@@ -13,6 +13,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="this.loadUsers($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-item>
     <p class="nUser">{{this.nUser}} {{'TAB4.friends' | translate}}</p>
   </ion-item>
@@ -31,4 +34,9 @@
       </ion-item>
     </ion-label>
   </ion-item>
+        
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

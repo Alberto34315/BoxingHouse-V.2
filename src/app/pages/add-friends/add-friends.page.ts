@@ -16,6 +16,8 @@ export class AddFriendsPage implements OnInit {
   user: user
   owner: user
   flag: boolean = true;
+  num: number = 0;
+  search
   public task: FormGroup;
   constructor(private modalController: ModalController,
     private api: ApiService,
@@ -28,7 +30,6 @@ export class AddFriendsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.users = []
     this.api.getUser(this.authS.getUser().id).then(result => {
       this.owner = result
       this.api.getAllFriends(this.owner.id).then(result => {
@@ -40,55 +41,94 @@ export class AddFriendsPage implements OnInit {
 
   }
   async ionViewDidEnter() {
-    await this.loadUsers();
+    await this.refrescar()
   }
   public async loadUsers($event = null) {
-    // await this.present.presentLoading;
     try {
-      this.users = await this.api.getAllUserLessOwner(this.authS.getUser().id);
-      if (this.users.length == 0) {
-        this.flag = true;
-      } else {
-        this.flag = false
-      }
       if ($event) {
         $event.target.complete();
+        this.num = 0
+        this.users = []
       }
-      //    this.present.dismissLoad();
+      this.present.presentLoading().then(async res => {
+        this.users = this.users.concat(await this.api.getAllUserLessOwner(this.authS.getUser().id, this.num));
+        if (this.users != null || this.users != undefined) {
+          this.present.dismissLoad()
+        }
+        if (this.users.length == 0) {
+          this.flag = true;
+        } else {
+          this.flag = false
+        }
+      }).catch(err => { console.log(err) })
     } catch (err) {
-      this.users = null; //vista
-      //      this.present.dismissLoad();
+      this.users = null;
       await this.present.presentToast("Error al cargar los Usuarios", "danger");
     }
   }
+  refrescar() {
+    this.num = 0
+    this.users = []
+    this.loadUsers();
+  }
 
+  loadMore($event = null) {
+    setTimeout(() => {
+      this.num += 10
+      /*this.task.get('check').setValue(false)
+      console.log(this.task.get('check').value)*/
+      if (this.search != undefined) {
+        this.searchUsers(this.search)
+      } else {
+        this.loadUsers()
+      }
+      $event.target.complete();
+    }, 500);
+  }
   public save() {
     this.users.forEach(element => {
       if (element.isChecked == false) {
         this.user = element
         this.authS.getUser().friends.push(this.user)
-        this.api.updateUser(this.authS.getUser()).then(result => { }).catch(err => { console.log(err.error) });
       }
     });
+    this.present.presentLoading().then(async res => {
+      this.api.updateUser(this.authS.getUser()).then(result => {
+        if (result != null || result != undefined) {
+          this.present.dismissLoad()
+        }
+      }).catch(err => { console.log(err.error) });
+    }).catch(err => { console.log(err) })
     this.modalController.dismiss();
   }
 
   public async searchUsers($event) {
-    let value = $event.detail.value;
-    value = value.trim();
-    if (value !== '') {
-      //await this.ui.showLoading();
-      this.api.searchUserLessOwner(this.authS.getUser().id, value)
-        .then(d => {
-          this.users = d;
-        })
-        .catch(async err => await this.present.presentToast(err.error, "danger"))
-        .finally(async () => {
-          // await this.ui.hideLoading();
-          // this.myInput.setFocus();
-        });
+    let value
+    if ($event.detail != undefined) {
+      value = $event.detail.value;
+      this.users = []
+      this.num = 0
     } else {
-      await this.loadUsers();
+      value = $event
+    }
+    value = value.trim();
+    this.search = value
+    if (value != '') {
+      this.present.presentLoading().then(async res => {
+        this.api.searchUserLessOwner(this.authS.getUser().id, value, this.num)
+          .then(d => {
+            this.users = this.users.concat(d);
+          })
+          .catch(async err => await this.present.presentToast(err.error, "danger"))
+          .finally(async () => {
+          });
+        if (this.users != null || this.users != undefined) {
+          this.present.dismissLoad()
+        }
+      }).catch(err => { console.log(err) })
+    } else {
+      this.search = undefined
+      this.refrescar()
     }
   }
   public exit() {

@@ -3,8 +3,9 @@
     <ion-button shape="round" (click)="this.exit()" color="success">
       <ion-icon name="arrow-undo-outline"></ion-icon>
     </ion-button>
-    <ion-button (click)="this.read(this.trainingStart.exercises[this.i])" fill="outline" color="medium">
-      <ion-icon name="mic-circle-outline" class="butt"></ion-icon>
+    <ion-button slot="end" (click)="this.read(this.trainingStart.exercises[this.i])" fill="outline" color="light">
+      <ion-icon *ngIf="!this.flag;else elseBlock" name="mic-off-circle-outline" class="butt"></ion-icon>
+      <ng-template #elseBlock><ion-icon name="mic-circle-outline"></ion-icon></ng-template>
     </ion-button>
   </ion-toolbar>
 </ion-header>

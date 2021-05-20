@@ -18,7 +18,7 @@ import { ChronometerPage } from '../chronometer/chronometer.page';
 export class StartTrainingPage implements OnInit {
   @Input("trainingStart") trainingStart: training;
   countRound = 1;
-  record:records;
+  record: records;
   i = 0;
   interval;
   t;
@@ -31,6 +31,7 @@ export class StartTrainingPage implements OnInit {
   ts;
   timeExer: BehaviorSubject<string> = new BehaviorSubject("00:00");
   state: 'stop' | 'start' = 'stop';
+  flag: boolean = false
   constructor(private modalController: ModalController,
     private timerS: TimerService,
     private api: ApiService,
@@ -46,7 +47,7 @@ export class StartTrainingPage implements OnInit {
       this.timerS.sBT = (this.trainingStart.time % 60)
     }
     this.t = this.trainingStart.exercises[this.i].repTime
-    this.read(this.trainingStart.exercises[this.i])
+    //  this.read(this.trainingStart.exercises[this.i])
   }
 
   async openChrono(): Promise<any> {
@@ -68,7 +69,8 @@ export class StartTrainingPage implements OnInit {
       this.i++;
       this.t = this.trainingStart.exercises[this.i].repTime
       clearInterval(this.interval);
-      this.read(this.trainingStart.exercises[this.i])
+      this.flag = false;
+    //  this.read(this.trainingStart.exercises[this.i])
     }
   }
 
@@ -77,7 +79,8 @@ export class StartTrainingPage implements OnInit {
       this.countRound--;
       this.i--;
       this.t = this.trainingStart.exercises[this.i].repTime
-      clearInterval(this.interval);
+      clearInterval(this.interval);      
+      this.flag = false;
     }
   }
   playTime() {
@@ -94,7 +97,7 @@ export class StartTrainingPage implements OnInit {
   stopTime() {
     this.state = 'stop';
     clearInterval(this.interval);
-    this.trainingStart.exercises[this.i].repTime=this.t
+    this.trainingStart.exercises[this.i].repTime = this.t
   }
 
   public exit() {
@@ -102,12 +105,12 @@ export class StartTrainingPage implements OnInit {
     this.modalController.dismiss();
   }
 
-  
+
   finishTraining() {
     let d = new Date();
-    this.record= {
-      idTrai: {id:this.trainingStart.id},
-      idu:{id:this.authS.getUser().id},
+    this.record = {
+      idTrai: { id: this.trainingStart.id },
+      idu: { id: this.authS.getUser().id },
       localDateTime: d
     }
     this.api.createRecord(this.record).then(result => {
@@ -116,8 +119,8 @@ export class StartTrainingPage implements OnInit {
       console.log(err.error)
     });
   }
-  
-  loadTimeExercise(i?:exercise): boolean {
+
+  loadTimeExercise(i?: exercise): boolean {
     let flag: boolean = false;
     if (i.type == "Time") {
       flag = true
@@ -133,13 +136,21 @@ export class StartTrainingPage implements OnInit {
       this.textTime = this.tm + ':' + this.ts;
       this.timeExer.next(this.textTime);
     } else {
-      this.num=i.repTime
+      this.num = i.repTime
       flag = false
     }
     return flag
   }
   read(item?: any) {
-    this.text = item.description
-    this.speak.talk(this.text);
+    if (!this.flag) {
+      this.text = item.description
+      this.speak.talk(this.text).then(res=>{
+      });
+      this.flag = true;
+    } else {
+      this.speak.talk("");
+      this.flag = false;
+    }
   }
+
 }

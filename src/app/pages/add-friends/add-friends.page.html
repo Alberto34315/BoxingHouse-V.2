@@ -14,6 +14,9 @@
 
 <ion-content> 
   <form id="form" [formGroup]="task" (ngSubmit)="this.save()">
+    <ion-refresher slot="fixed" (ionRefresh)="this.loadUsers($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
   <ion-list>
     <ion-item *ngFor="let u of users">
       <ion-label>
@@ -32,4 +35,8 @@
   <ion-button [disabled]="this.flag"  class="bottom" type="submit" expand="block" shape="round">{{'EXERCISE.save' | translate}}
   </ion-button>
 </form>
+<ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)">
+  <ion-infinite-scroll-content loadingSpinner="bubbles">
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>
 </ion-content>

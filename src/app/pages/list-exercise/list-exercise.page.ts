@@ -14,7 +14,9 @@ import { AddExercisePage } from '../add-exercise/add-exercise.page';
 })
 export class ListExercisePage implements OnInit {
   @ViewChild('input', { static: false }) myInput: IonSearchbar;
-  exercises: exercise[];
+  exercises: exercise[]=[];
+  num: number = 0;
+  search
   constructor(private api: ApiService,
     private modalController: ModalController,
     private authS: AuthService,
@@ -23,19 +25,23 @@ export class ListExercisePage implements OnInit {
   ngOnInit() {
   }
   async ionViewDidEnter() {
-    await this.loadAll();
+    await this.refrescar()
   }
   public async loadAll($event = null) {
-    // await this.present.presentLoading;
     try {
-      this.exercises = await this.api.getExercisesByUser(this.authS.getUser().id);
-      //    this.present.dismissLoad();
       if ($event) {
         $event.target.complete();
+        this.num = 0
+        this.exercises = []
       }
+      this.present.presentLoading().then(async res => {
+      this.exercises = this.exercises.concat(await this.api.getExercisesByUser(this.authS.getUser().id, this.num));
+      if (this.exercises != null || this.exercises != undefined) {
+        this.present.dismissLoad()
+      }
+    }).catch(err => { console.log(err) })
     } catch (err) {
-      this.exercises = null; //vista
-      //      this.present.dismissLoad();
+      this.exercises = null; 
       await this.present.presentToast("Error al cargar los entrenamientos", "danger");
     }
   }
@@ -44,26 +50,51 @@ export class ListExercisePage implements OnInit {
   }
   async editExercise(e: exercise) {
     await this.openAddExercise(e);
-    await this.loadAll();
+    await this.refrescar();
   }
   public async searchExercise($event) {
-    let value = $event.detail.value;
+    let value
+    if($event.detail!=undefined){
+       value = $event.detail.value;
+      this.exercises=[]
+      this.num=0
+    }else{
+      value=$event
+    }
     value = value.trim();
-    if (value !== '') {
-      //await this.ui.showLoading();
-      this.api.searchExerciseByTitle(value, this.authS.getUser().id)
+    this.search=value
+    if (value != '') {
+      this.api.searchExerciseByTitle(value, this.authS.getUser().id, this.num)
         .then(d => {
-          this.exercises = d;
+          this.exercises =this.exercises.concat(d);
         })
         .catch(async err => await this.present.presentToast(err.error, "danger"))
         .finally(async () => {
-          // await this.ui.hideLoading();
-          // this.myInput.setFocus();
         });
     } else {
-      await this.loadAll();
+      this.search=undefined
+      this.refrescar()
     }
   }
+  
+  refrescar() {
+    this.num = 0
+    this.exercises = []
+    this.loadAll();
+}
+
+loadMore($event = null) {
+  setTimeout(() => {
+    this.num += 10
+    if(this.search!=undefined){
+      this.searchExercise(this.search)
+    }else{
+      this.loadAll()
+    }
+    $event.target.complete();
+  }, 500);
+}
+
   async openAddExercise(e?: any): Promise<any> {
 
     const modal = await this.modalController.create({
@@ -85,7 +116,7 @@ export class ListExercisePage implements OnInit {
     }
     setTimeout(() => {
       this.api.removeExercise(item).then(async d => {
-        await this.loadAll()
+        await this.refrescar()
       }).catch(async err => {
         console.log(err)
       })

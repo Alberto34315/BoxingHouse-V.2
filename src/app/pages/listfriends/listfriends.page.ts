@@ -12,8 +12,10 @@ import { PresentService } from 'src/app/services/present.service';
 })
 export class ListfriendsPage implements OnInit {
   users: user[]
-  nUser:number
-  constructor( private modalController: ModalController,
+  nUser: number
+  num: number = 0;
+  search
+  constructor(private modalController: ModalController,
     private api: ApiService,
     private authS: AuthService,
     private present: PresentService) { }
@@ -22,49 +24,77 @@ export class ListfriendsPage implements OnInit {
   }
 
   async ionViewDidEnter() {
-    await this.loadUsers();
+    this.present.presentLoading().then(async res => {
+      await this.refrescar()
+      if (this.users != null || this.users != undefined) {
+        this.present.dismissLoad()
+      }
+    }).catch(err => { console.log(err) })
   }
   public async loadUsers($event = null) {
-    // await this.present.presentLoading;
     try {
-      this.users = await this.api.getAllFriends(this.authS.getUser().id);
-      this.nUser=this.users.length
       if ($event) {
         $event.target.complete();
+        this.num = 0
+        this.users = []
       }
-      //    this.present.dismissLoad();
+      this.users = this.users.concat(await this.api.getAllFriendsLimit(this.authS.getUser().id, this.num));
+      this.nUser = this.users.length
     } catch (err) {
-      this.users = null; //vista
-      //      this.present.dismissLoad();
+      this.users = null;
       await this.present.presentToast("Error al cargar los entrenamientos", "danger");
     }
   }
-  async removeFriendBtn(u:user) {
+  async removeFriendBtn(u: user) {
     await this.removeFriend(u);
-     await this.loadUsers();
+    this.users.splice(this.users.indexOf(u),1)
+    this.refrescar()
   }
-  public async removeFriend(u:user){
-    await this.api.deleteFromFriendship(this.authS.getUser(),u).then(result=>{}).catch(err=>{console.log(err.error)});
+  public async removeFriend(u: user) {
+    await this.api.deleteFromFriendship(this.authS.getUser(), u).then(result => { }).catch(err => { console.log(err.error) });
+  }
+  refrescar() {
+    this.num = 0
+    this.users = []
+    this.loadUsers();
   }
 
+  loadMore($event = null) {
+    setTimeout(() => {
+      this.num += 10
+      if (this.search != undefined) {
+        this.searchUsers(this.search)
+      } else {
+        this.loadUsers()
+      }
+      $event.target.complete();
+    }, 500);
+  }
   public async searchUsers($event) {
-    let value = $event.detail.value;
+    let value
+    if ($event.detail != undefined) {
+      value = $event.detail.value;
+      this.users = []
+      this.num = 0
+    } else {
+      value = $event
+    }
     value = value.trim();
-    if (value !== '') {
-      //await this.ui.showLoading();
-      this.api.searchFriends(this.authS.getUser().id,value)
+    this.search = value
+    if (value != '') {
+      this.api.searchFriends(this.authS.getUser().id, value, this.num)
         .then(d => {
-          this.users = d;
+          this.users = this.users.concat(d);
         })
         .catch(async err => await this.present.presentToast(err.error, "danger"))
         .finally(async () => {
-          // await this.ui.hideLoading();
-          // this.myInput.setFocus();
         });
     } else {
-      await this.loadUsers();
+      this.search = undefined
+      this.refrescar()
     }
   }
+
   public exit() {
     this.modalController.dismiss();
   }

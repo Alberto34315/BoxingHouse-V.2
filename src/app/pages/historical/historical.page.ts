@@ -15,6 +15,8 @@ export class HistoricalPage implements OnInit {
   date: Date;
   trainings: training[];
   records: records[];
+  num: number = 0;
+  search
   constructor(private modalController: ModalController,
     private api: ApiService,
     private authS: AuthService,
@@ -23,14 +25,21 @@ export class HistoricalPage implements OnInit {
   ngOnInit() {
   }
   async ionViewDidEnter() {
-    await this.loadAll();
+    await this.refrescar()
   }
   public async loadAll($event = null) {
-    try {
-      this.records = await this.api.getRecordsByUser(this.authS.getUser().id);
+    try { 
       if ($event) {
         $event.target.complete();
+        this.num = 0
+        this.records = []
       }
+      this.present.presentLoading().then(async res => {
+      this.records = this.records.concat(await this.api.getRecordsByUser(this.authS.getUser().id, this.num));
+      if (this.records != null || this.records != undefined) {
+        this.present.dismissLoad()
+      }
+    }).catch(err => { console.log(err) })
     } catch (err) {
       this.records = null;
       await this.present.presentToast("Error al cargar los entrenamientos", "danger");
@@ -39,26 +48,49 @@ export class HistoricalPage implements OnInit {
   public exit() {
     this.modalController.dismiss();
   }
-
+  loadMore($event = null) {
+    setTimeout(() => {
+      this.num += 10
+      if(this.search!=undefined){
+        this.searchRecords(this.search)
+      }else{
+        this.loadAll()
+      }
+      $event.target.complete();
+    }, 500);
+  }
   format(i?: Date): boolean {
     let result = true;
     this.date = new Date(i);
     return result;
   }
-
+  refrescar() {
+    this.num = 0
+    this.records = []
+    this.loadAll();
+}
   public async searchRecords($event) {
-    let value = $event.detail.value;
+    let value
+    if($event.detail!=undefined){
+       value = $event.detail.value;
+      this.records=[]
+      this.num=0
+    }else{
+      value=$event
+    }
     value = value.trim();
-    if (value !== '') {
-      this.api.searchRecords(this.authS.getUser().id, value)
+    this.search=value
+    if (value != '') {
+      this.api.searchRecords(this.authS.getUser().id, value, this.num)
         .then(d => {
-          this.records = d;
+          this.records = this.records.concat(d);
         })
         .catch(async err => await this.present.presentToast(err.error, "danger"))
         .finally(async () => {
         });
     } else {
-      await this.loadAll();
+      this.search=undefined
+      this.refrescar()
     }
   }
 }
